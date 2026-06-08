@@ -22,10 +22,13 @@
   var META = window.SITE_META || { title: {}, subtitle: {}, footer: {} };
   var PAGES = Array.isArray(window.SITE_PAGES) ? window.SITE_PAGES : [];
 
+  /* repo the ★ button links to (the project this site showcases) */
+  var GH_REPO = "microsoft/VibeVoice";
+
   /* ---------- chrome i18n (page content strings live in the data) ---------- */
   var I18N = {
-    en: { close: "Close", menu: "Pages", skip: "Skip to content" },
-    zh: { close: "關閉", menu: "頁面", skip: "跳到內容" }
+    en: { close: "Close", menu: "Pages", skip: "Skip to content", star: "Star microsoft/VibeVoice on GitHub" },
+    zh: { close: "關閉", menu: "頁面", skip: "跳到內容", star: "在 GitHub 上為 microsoft/VibeVoice 加星" }
   };
 
   /* ---------- sandbox-safe localStorage ---------- */
@@ -88,6 +91,11 @@
           '<span class="brand__name" id="brandName"></span>' +
         '</a>' +
         '<div class="appbar__actions">' +
+          '<a class="gh-star" id="ghStar" href="https://github.com/' + GH_REPO + '" ' +
+             'target="_blank" rel="noopener" data-repo="' + GH_REPO + '">' +
+            '<span class="material-symbols-rounded gh-star__icon" aria-hidden="true">star</span>' +
+            '<span class="gh-star__count" id="ghStarCount" aria-hidden="true"></span>' +
+          '</a>' +
           '<button class="icon-btn" id="langToggle" type="button" title="Language" aria-label="Toggle language / 切換語言">' +
             '<span class="material-symbols-rounded">translate</span>' +
             '<span class="icon-btn__txt" id="langLabel">中</span>' +
@@ -175,7 +183,34 @@
     if (nav) nav.setAttribute("aria-label", ui("menu"));
     var dc = document.getElementById("dialogClose");
     if (dc) dc.setAttribute("aria-label", ui("close"));
+    var gs = document.getElementById("ghStar");
+    if (gs) { gs.setAttribute("aria-label", ui("star")); gs.setAttribute("title", ui("star")); }
     paintNav();
+  }
+
+  /* ---------- GitHub star count (live, cached, fails silently) ---------- */
+  function formatStars(n) {
+    if (n >= 1000) return (n / 1000).toFixed(1).replace(/\.0$/, "") + "k";
+    return String(n);
+  }
+  function loadStars() {
+    var el = document.getElementById("ghStarCount");
+    if (!el) return;
+    var KEY = "ghstars:" + GH_REPO, TTL = 6 * 3600 * 1000, now = new Date().getTime();
+    function show(n) { el.textContent = formatStars(n); el.classList.add("gh-star__count--on"); }
+    try {
+      var c = JSON.parse(lsGet(KEY) || "null");
+      if (c && typeof c.n === "number") { show(c.n); if (now - c.t < TTL) return; }
+    } catch (e) { /* ignore */ }
+    fetch("https://api.github.com/repos/" + GH_REPO)
+      .then(function (r) { return r.ok ? r.json() : null; })
+      .then(function (j) {
+        if (j && typeof j.stargazers_count === "number") {
+          show(j.stargazers_count);
+          lsSet(KEY, JSON.stringify({ n: j.stargazers_count, t: new Date().getTime() }));
+        }
+      })
+      .catch(function () { /* offline / rate-limited: keep the plain ★ link */ });
   }
 
   /* =======================================================================
@@ -230,6 +265,7 @@
     applyLangChrome();
     refreshChrome();
     wire();
+    loadStars();
     window.LDW.ready = true;
     document.dispatchEvent(new CustomEvent("ldw:shell-ready"));
   }

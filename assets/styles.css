@@ -396,6 +396,25 @@ body { letter-spacing:-.005em; }
 }
 .icon-btn:hover { background:var(--surface-container-high); }
 
+/* ---- GitHub star button (top-right) ---- */
+.gh-star {
+  display:inline-flex; align-items:center; gap:6px;
+  padding:7px 12px; border-radius:999px;
+  border:1px solid var(--outline-variant); background:var(--surface-container);
+  color:var(--on-surface); font-size:.85rem; font-weight:600;
+  font-variant-numeric:tabular-nums; line-height:1;
+  transition:transform .25s var(--ease-spring),border-color .25s,box-shadow .25s,background .25s;
+}
+.gh-star:hover {
+  transform:translateY(-1px);
+  border-color:color-mix(in srgb,#ffc857 55%,transparent);
+  box-shadow:0 8px 20px -10px rgba(255,200,87,.6);
+}
+.gh-star:focus-visible { outline:2px solid color-mix(in srgb,#ffc857 80%,transparent); outline-offset:2px; }
+.gh-star__icon { font-size:20px; color:#ffc857; font-variation-settings:"FILL" 1,"wght" 500; filter:drop-shadow(0 0 8px rgba(255,200,87,.55)); }
+.gh-star__count:empty { display:none; }
+@media (max-width:380px) { .gh-star { padding:7px 9px; } .gh-star__count { display:none; } }
+
 /* ---- hero stats : glowing figures ---- */
 .hero__stats { gap:16px; margin-bottom:32px; }
 .hero__stat {
