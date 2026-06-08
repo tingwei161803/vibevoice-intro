@@ -98,6 +98,43 @@ window.SITE_PAGES = [
     ]
   },
 
+  /* ===================== 2b. VERSIONS (model comparison) ===================== */
+  {
+    slug: "versions", layout: "comparison", icon: "splitscreen",
+    title: { en: "Model comparison", zh: "版本比較" },
+    subtitle: {
+      en: "The three VibeVoice models side by side — pick the right one for the job.",
+      zh: "VibeVoice 三個版本並列比較——依任務挑對的那一個。"
+    },
+    plans: [
+      { key: "realtime", name: { en: "Realtime-0.5B", zh: "Realtime-0.5B" }, price: { en: "0.5B", zh: "0.5B" }, note: { en: "real-time", zh: "即時串流" } },
+      { key: "tts",      name: { en: "TTS-1.5B",      zh: "TTS-1.5B" },      price: { en: "1.5B", zh: "1.5B" }, highlight: true, note: { en: "flagship", zh: "旗艦" } },
+      { key: "asr",      name: { en: "ASR-7B",        zh: "ASR-7B" },        price: { en: "7B",   zh: "7B" },   note: { en: "recognition", zh: "辨識" } }
+    ],
+    features: [
+      { label: { en: "Task", zh: "任務類型" },
+        values: { realtime: { en: "TTS (stream)", zh: "語音合成（串流）" }, tts: { en: "Text-to-Speech", zh: "語音合成" }, asr: { en: "Speech-to-Text", zh: "語音辨識" } } },
+      { label: { en: "Max length", zh: "最長處理長度" },
+        values: { realtime: { en: "~10 min", zh: "約 10 分鐘" }, tts: { en: "90 min", zh: "90 分鐘" }, asr: { en: "60 min", zh: "60 分鐘" } } },
+      { label: { en: "Speakers", zh: "同時語者" },
+        values: { realtime: "1", tts: { en: "up to 4", zh: "最多 4" }, asr: { en: "—", zh: "—" } } },
+      { label: { en: "Context", zh: "脈絡長度" },
+        values: { realtime: "8K", tts: "64K", asr: "64K" } },
+      { label: { en: "Streaming text input", zh: "串流文字輸入" },
+        values: { realtime: true, tts: false, asr: false } },
+      { label: { en: "Low latency (~300 ms)", zh: "低延遲（約 300ms）" },
+        values: { realtime: true, tts: false, asr: false } },
+      { label: { en: "Multi-speaker consistency", zh: "多語者一致" },
+        values: { realtime: false, tts: true, asr: false } },
+      { label: { en: "Timestamps + diarization", zh: "時間戳 + 語者標註" },
+        values: { realtime: false, tts: false, asr: true } },
+      { label: { en: "Languages", zh: "語言" },
+        values: { realtime: { en: "Multi-voice", zh: "多語音色" }, tts: { en: "EN / ZH first", zh: "英・中為主" }, asr: { en: "50+ languages", zh: "50+ 語言" } } },
+      { label: { en: "Best for", zh: "適合場景" },
+        values: { realtime: { en: "Agent voice", zh: "AI 代理語音" }, tts: { en: "Long podcasts", zh: "長篇 Podcast" }, asr: { en: "Transcription", zh: "逐字稿" } } }
+    ]
+  },
+
   /* ===================== 3. ARCHITECTURE (article) ===================== */
   {
     slug: "architecture", layout: "article", icon: "schema",
