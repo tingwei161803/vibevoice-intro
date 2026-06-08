@@ -22,13 +22,13 @@
   var META = window.SITE_META || { title: {}, subtitle: {}, footer: {} };
   var PAGES = Array.isArray(window.SITE_PAGES) ? window.SITE_PAGES : [];
 
-  /* repo the ★ button links to (the project this site showcases) */
-  var GH_REPO = "microsoft/VibeVoice";
+  /* repo the ★ button links to */
+  var GH_REPO = "tingwei161803/vibevoice-intro";
 
   /* ---------- chrome i18n (page content strings live in the data) ---------- */
   var I18N = {
-    en: { close: "Close", menu: "Pages", skip: "Skip to content", star: "Star microsoft/VibeVoice on GitHub" },
-    zh: { close: "關閉", menu: "頁面", skip: "跳到內容", star: "在 GitHub 上為 microsoft/VibeVoice 加星" }
+    en: { close: "Close", menu: "Pages", skip: "Skip to content", star: "Star this project on GitHub" },
+    zh: { close: "關閉", menu: "頁面", skip: "跳到內容", star: "在 GitHub 上為這個專案加星" }
   };
 
   /* ---------- sandbox-safe localStorage ---------- */
