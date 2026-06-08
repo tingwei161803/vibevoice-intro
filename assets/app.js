@@ -640,18 +640,31 @@
     function revealItems() {
       if (!("IntersectionObserver" in window)) return;
       if (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-      // table rows reveal poorly (transforms on <tr> are buggy); keep tables solid
-      var items = [].slice.call(pageEl.querySelectorAll("[data-item]"))
-        .filter(function (el) { return el.tagName !== "TR"; });
-      if (!items.length) return;
       pageEl.classList.add("has-reveal");
       var io = new IntersectionObserver(function (entries) {
         entries.forEach(function (en) {
           if (en.isIntersecting) { en.target.classList.add("in"); io.unobserve(en.target); }
         });
       }, { rootMargin: "0px 0px -8% 0px", threshold: 0.06 });
-      items.forEach(function (el) { io.observe(el); });
-      teardowns.push(function () { io.disconnect(); });
+      // table rows reveal poorly (transforms on <tr> are buggy) — show them at once
+      function arm(el) { if (el.tagName === "TR") el.classList.add("in"); else io.observe(el); }
+      [].forEach.call(pageEl.querySelectorAll("[data-item]"), arm);
+      // Content painted AFTER first render (gallery filter/search swaps #grid, table
+      // re-sorts tbody) must reveal too — otherwise a re-paint leaves new cards stuck
+      // at opacity:0. Show freshly inserted items immediately.
+      var mo = new MutationObserver(function (muts) {
+        muts.forEach(function (m) {
+          [].forEach.call(m.addedNodes, function (n) {
+            if (n.nodeType !== 1) return;
+            if (n.matches && n.matches("[data-item]")) n.classList.add("in");
+            if (n.querySelectorAll) {
+              [].forEach.call(n.querySelectorAll("[data-item]"), function (c) { c.classList.add("in"); });
+            }
+          });
+        });
+      });
+      mo.observe(pageEl, { childList: true, subtree: true });
+      teardowns.push(function () { io.disconnect(); mo.disconnect(); });
     }
 
     /* =====================================================================
