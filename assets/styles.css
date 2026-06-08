@@ -493,7 +493,11 @@ body { letter-spacing:-.005em; }
 .acc-q { font-family:var(--font-display); }
 
 /* ---- comparison ---- */
-.cmp-table { border-radius:20px; overflow:hidden; }
+/* wide multi-column tables scroll horizontally inside .table-wrap instead of
+   cramming; the wrapper (overflow-x:auto) contains it so the page never overflows */
+.cmp-table { border-radius:20px; overflow:hidden; min-width:720px; }
+.cmp-table th, .cmp-table td { white-space:nowrap; }
+.cmp-feat { white-space:normal !important; }
 .cmp-col--hl { background:color-mix(in srgb,var(--primary) 14%,transparent); }
 .cmp-price { color:var(--primary); }
 .cmp-yes { color:var(--tertiary); filter:drop-shadow(0 0 8px color-mix(in srgb,var(--tertiary) 50%,transparent)); }

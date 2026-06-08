@@ -260,23 +260,24 @@ window.SITE_PAGES = [
       zh: "VibeVoice 與常見及開源 TTS 模型的並列比較。屬概略、非窮盡的整理——各方強項依使用情境而異。"
     },
     plans: [
-      { key: "vv",    name: { en: "VibeVoice",   zh: "VibeVoice" },   price: { en: "MIT · open", zh: "MIT · 開源" }, highlight: true, note: { en: "self-hosted", zh: "可自架" } },
-      { key: "el",    name: { en: "ElevenLabs",  zh: "ElevenLabs" },  price: { en: "$99+/mo",    zh: "$99+/月" },   note: { en: "cloud SaaS", zh: "雲端 SaaS" } },
-      { key: "f5",    name: { en: "F5-TTS",      zh: "F5-TTS" },      price: { en: "open",       zh: "開源" },       note: { en: "single-shot", zh: "單句強" } },
-      { key: "xtts",  name: { en: "XTTS-v2",     zh: "XTTS-v2" },     price: { en: "open",       zh: "開源" },       note: { en: "Coqui", zh: "Coqui" } },
-      { key: "spark", name: { en: "SparkTTS",    zh: "SparkTTS" },    price: { en: "open",       zh: "開源" },       note: { en: "0.5B · clone", zh: "0.5B 複製" } },
-      { key: "cosy",  name: { en: "CosyVoice 2", zh: "CosyVoice 2" }, price: { en: "Apache-2.0", zh: "Apache-2.0" }, note: { en: "Alibaba · stream", zh: "Alibaba 串流" } }
+      { key: "vv",    name: { en: "VibeVoice",      zh: "VibeVoice" },      price: { en: "MIT · open", zh: "MIT · 開源" }, highlight: true, note: { en: "self-hosted", zh: "可自架" } },
+      { key: "oai",   name: { en: "gpt-4o-mini-tts", zh: "gpt-4o-mini-tts" }, price: { en: "$0.015/min", zh: "$0.015/分" }, note: { en: "OpenAI · steerable", zh: "OpenAI 可指揮" } },
+      { key: "el",    name: { en: "ElevenLabs",     zh: "ElevenLabs" },     price: { en: "$99+/mo",    zh: "$99+/月" },   note: { en: "cloud SaaS", zh: "雲端 SaaS" } },
+      { key: "f5",    name: { en: "F5-TTS",         zh: "F5-TTS" },         price: { en: "open",       zh: "開源" },       note: { en: "single-shot", zh: "單句強" } },
+      { key: "xtts",  name: { en: "XTTS-v2",        zh: "XTTS-v2" },        price: { en: "open",       zh: "開源" },       note: { en: "Coqui", zh: "Coqui" } },
+      { key: "spark", name: { en: "SparkTTS",       zh: "SparkTTS" },       price: { en: "open",       zh: "開源" },       note: { en: "0.5B · clone", zh: "0.5B 複製" } },
+      { key: "cosy",  name: { en: "CosyVoice 2",    zh: "CosyVoice 2" },    price: { en: "Apache-2.0", zh: "Apache-2.0" }, note: { en: "Alibaba · stream", zh: "Alibaba 串流" } }
     ],
     features: [
-      { label: { en: "Multi-speaker consistency", zh: "多語者長對話一致性" }, values: { vv: true, el: true, f5: false, xtts: false, spark: false, cosy: false } },
-      { label: { en: "90-minute single pass",     zh: "單次最長 90 分鐘" },   values: { vv: true, el: false, f5: false, xtts: false, spark: false, cosy: false } },
-      { label: { en: "Real-time streaming",       zh: "即時串流（低延遲）" }, values: { vv: true, el: true, f5: false, xtts: false, spark: false, cosy: true } },
-      { label: { en: "Zero-shot voice clone",     zh: "零樣本聲音複製" },     values: { vv: { en: "via ref", zh: "參考音" }, el: true, f5: true, xtts: true, spark: true, cosy: true } },
-      { label: { en: "Language breadth",          zh: "語言廣度" },           values: { vv: { en: "EN / ZH", zh: "英 / 中" }, el: { en: "Multi", zh: "多語" }, f5: { en: "EN / ZH", zh: "英 / 中" }, xtts: { en: "17", zh: "17 種" }, spark: { en: "EN / ZH", zh: "英 / 中" }, cosy: { en: "Multi", zh: "多語" } } },
-      { label: { en: "Self-host / local",         zh: "自架 / 本地部署" },     values: { vv: true, el: false, f5: true, xtts: true, spark: true, cosy: true } },
-      { label: { en: "Open license",              zh: "開源授權" },           values: { vv: { en: "MIT", zh: "MIT" }, el: false, f5: { en: "Open", zh: "開源" }, xtts: { en: "Non-commercial", zh: "非商用" }, spark: { en: "Open", zh: "開源" }, cosy: { en: "Apache-2.0", zh: "Apache-2.0" } } },
-      { label: { en: "Top single-utterance",      zh: "頂尖單句音質" },       values: { vv: { en: "Great", zh: "很好" }, el: true, f5: true, xtts: false, spark: { en: "Good", zh: "不錯" }, cosy: true } },
-      { label: { en: "Commercial-ready",          zh: "開箱即可商用" },       values: { vv: { en: "Research", zh: "研究用" }, el: true, f5: { en: "DIY", zh: "自評" }, xtts: false, spark: { en: "DIY", zh: "自評" }, cosy: true } }
+      { label: { en: "Multi-speaker consistency", zh: "多語者長對話一致性" }, values: { vv: true, oai: false, el: true, f5: false, xtts: false, spark: false, cosy: false } },
+      { label: { en: "90-minute single pass",     zh: "單次最長 90 分鐘" },   values: { vv: true, oai: false, el: false, f5: false, xtts: false, spark: false, cosy: false } },
+      { label: { en: "Real-time streaming",       zh: "即時串流（低延遲）" }, values: { vv: true, oai: true, el: true, f5: false, xtts: false, spark: false, cosy: true } },
+      { label: { en: "Zero-shot voice clone",     zh: "零樣本聲音複製" },     values: { vv: { en: "via ref", zh: "參考音" }, oai: false, el: true, f5: true, xtts: true, spark: true, cosy: true } },
+      { label: { en: "Language breadth",          zh: "語言廣度" },           values: { vv: { en: "EN / ZH", zh: "英 / 中" }, oai: { en: "50+", zh: "50+" }, el: { en: "Multi", zh: "多語" }, f5: { en: "EN / ZH", zh: "英 / 中" }, xtts: { en: "17", zh: "17 種" }, spark: { en: "EN / ZH", zh: "英 / 中" }, cosy: { en: "Multi", zh: "多語" } } },
+      { label: { en: "Self-host / local",         zh: "自架 / 本地部署" },     values: { vv: true, oai: false, el: false, f5: true, xtts: true, spark: true, cosy: true } },
+      { label: { en: "Open license",              zh: "開源授權" },           values: { vv: { en: "MIT", zh: "MIT" }, oai: false, el: false, f5: { en: "Open", zh: "開源" }, xtts: { en: "Non-commercial", zh: "非商用" }, spark: { en: "Open", zh: "開源" }, cosy: { en: "Apache-2.0", zh: "Apache-2.0" } } },
+      { label: { en: "Top single-utterance",      zh: "頂尖單句音質" },       values: { vv: { en: "Great", zh: "很好" }, oai: true, el: true, f5: true, xtts: false, spark: { en: "Good", zh: "不錯" }, cosy: true } },
+      { label: { en: "Commercial-ready",          zh: "開箱即可商用" },       values: { vv: { en: "Research", zh: "研究用" }, oai: true, el: true, f5: { en: "DIY", zh: "自評" }, xtts: false, spark: { en: "DIY", zh: "自評" }, cosy: true } }
     ]
   },
 
@@ -289,19 +290,45 @@ window.SITE_PAGES = [
       zh: "VibeVoice-ASR 與 FunASR、Whisper 的並列比較——開源語音辨識並排看。"
     },
     plans: [
-      { key: "vv",      name: { en: "VibeVoice-ASR", zh: "VibeVoice-ASR" }, price: { en: "7B", zh: "7B" }, highlight: true, note: { en: "long-form", zh: "長音訊" } },
-      { key: "funasr",  name: { en: "FunASR",        zh: "FunASR" },        price: { en: "open", zh: "開源" }, note: { en: "Alibaba", zh: "Alibaba" } },
-      { key: "whisper", name: { en: "Whisper",       zh: "Whisper" },       price: { en: "open", zh: "開源" }, note: { en: "OpenAI", zh: "OpenAI" } }
+      { key: "vv",      name: { en: "VibeVoice-ASR",    zh: "VibeVoice-ASR" },    price: { en: "7B", zh: "7B" }, highlight: true, note: { en: "long-form", zh: "長音訊" } },
+      { key: "funasr",  name: { en: "FunASR",           zh: "FunASR" },           price: { en: "open", zh: "開源" }, note: { en: "Alibaba", zh: "Alibaba" } },
+      { key: "whisper", name: { en: "Whisper",          zh: "Whisper" },          price: { en: "open", zh: "開源" }, note: { en: "OpenAI · open", zh: "OpenAI 開源" } },
+      { key: "oai",     name: { en: "gpt-4o-transcribe", zh: "gpt-4o-transcribe" }, price: { en: "API", zh: "API" }, note: { en: "OpenAI · API", zh: "OpenAI · API" } }
     ],
     features: [
-      { label: { en: "Open license",            zh: "開源授權" },     values: { vv: { en: "MIT", zh: "MIT" }, funasr: { en: "MIT", zh: "MIT" }, whisper: { en: "MIT", zh: "MIT" } } },
-      { label: { en: "Long-form single pass",   zh: "單次長音訊" },   values: { vv: { en: "60 min", zh: "60 分鐘" }, funasr: true, whisper: { en: "chunked", zh: "分段處理" } } },
-      { label: { en: "Speaker diarization",     zh: "語者標註" },     values: { vv: true, funasr: true, whisper: false } },
-      { label: { en: "Timestamps",              zh: "時間戳" },       values: { vv: true, funasr: true, whisper: true } },
-      { label: { en: "Streaming / real-time",   zh: "串流 / 即時" },  values: { vv: false, funasr: true, whisper: false } },
-      { label: { en: "Languages",               zh: "語言" },         values: { vv: { en: "50+", zh: "50+" }, funasr: { en: "50+", zh: "50+" }, whisper: { en: "~99", zh: "~99" } } },
-      { label: { en: "Speed",                   zh: "速度" },         values: { vv: { en: "60-min pass", zh: "單次 60 分" }, funasr: { en: "up to 170x", zh: "最高 170x" }, whisper: { en: "baseline", zh: "基準" } } },
-      { label: { en: "Self-host / local",       zh: "自架 / 本地部署" }, values: { vv: true, funasr: true, whisper: true } }
+      { label: { en: "Open license",            zh: "開源授權" },     values: { vv: { en: "MIT", zh: "MIT" }, funasr: { en: "MIT", zh: "MIT" }, whisper: { en: "MIT", zh: "MIT" }, oai: { en: "Proprietary", zh: "閉源" } } },
+      { label: { en: "Long-form single pass",   zh: "單次長音訊" },   values: { vv: { en: "60 min", zh: "60 分鐘" }, funasr: true, whisper: { en: "chunked", zh: "分段處理" }, oai: { en: "chunked", zh: "分段處理" } } },
+      { label: { en: "Speaker diarization",     zh: "語者標註" },     values: { vv: true, funasr: true, whisper: false, oai: false } },
+      { label: { en: "Timestamps",              zh: "時間戳" },       values: { vv: true, funasr: true, whisper: true, oai: { en: "limited", zh: "部分" } } },
+      { label: { en: "Streaming / real-time",   zh: "串流 / 即時" },  values: { vv: false, funasr: true, whisper: false, oai: true } },
+      { label: { en: "Languages",               zh: "語言" },         values: { vv: { en: "50+", zh: "50+" }, funasr: { en: "50+", zh: "50+" }, whisper: { en: "~99", zh: "~99" }, oai: { en: "Multi", zh: "多語" } } },
+      { label: { en: "Speed",                   zh: "速度" },         values: { vv: { en: "60-min pass", zh: "單次 60 分" }, funasr: { en: "up to 170x", zh: "最高 170x" }, whisper: { en: "baseline", zh: "基準" }, oai: { en: "high accuracy", zh: "高準確率" } } },
+      { label: { en: "Self-host / local",       zh: "自架 / 本地部署" }, values: { vv: true, funasr: true, whisper: true, oai: false } }
+    ]
+  },
+
+  /* ===================== 5a-2. COMPARE — REALTIME (comparison) ===================== */
+  {
+    slug: "compare-realtime", layout: "comparison", icon: "voice_chat",
+    title: { en: "Realtime voice", zh: "即時語音對比" },
+    subtitle: {
+      en: "Low-latency streaming voice — VibeVoice-Realtime next to OpenAI's latest realtime model and CosyVoice 2.",
+      zh: "低延遲串流語音——VibeVoice-Realtime 對比 OpenAI 最新即時模型與 CosyVoice 2。"
+    },
+    plans: [
+      { key: "vv",   name: { en: "VibeVoice-Realtime", zh: "VibeVoice-Realtime" }, price: { en: "0.5B", zh: "0.5B" }, highlight: true, note: { en: "open · self-host", zh: "開源・可自架" } },
+      { key: "oai",  name: { en: "GPT-Realtime-2",     zh: "GPT-Realtime-2" },     price: { en: "API", zh: "API" },   note: { en: "OpenAI · 2026", zh: "OpenAI · 2026" } },
+      { key: "cosy", name: { en: "CosyVoice 2",        zh: "CosyVoice 2" },        price: { en: "Apache-2.0", zh: "Apache-2.0" }, note: { en: "Alibaba", zh: "Alibaba" } }
+    ],
+    features: [
+      { label: { en: "Type", zh: "類型" }, values: { vv: { en: "streaming TTS", zh: "串流 TTS" }, oai: { en: "speech-to-speech", zh: "語音對語音" }, cosy: { en: "streaming TTS", zh: "串流 TTS" } } },
+      { label: { en: "First-audio latency", zh: "首字延遲" }, values: { vv: { en: "~300 ms", zh: "~300 毫秒" }, oai: { en: "low", zh: "低延遲" }, cosy: { en: "~150 ms", zh: "~150 毫秒" } } },
+      { label: { en: "Streaming input", zh: "串流輸入" }, values: { vv: true, oai: true, cosy: true } },
+      { label: { en: "Reasoning / dialogue", zh: "推理 / 對話智慧" }, values: { vv: false, oai: true, cosy: false } },
+      { label: { en: "Live translation", zh: "即時翻譯" }, values: { vv: false, oai: true, cosy: false } },
+      { label: { en: "Open / self-host", zh: "開源 / 可自架" }, values: { vv: true, oai: false, cosy: true } },
+      { label: { en: "License", zh: "授權" }, values: { vv: { en: "MIT", zh: "MIT" }, oai: { en: "Proprietary", zh: "閉源" }, cosy: { en: "Apache-2.0", zh: "Apache-2.0" } } },
+      { label: { en: "Context window", zh: "脈絡長度" }, values: { vv: { en: "8K", zh: "8K" }, oai: { en: "128K", zh: "128K" }, cosy: { en: "—", zh: "—" } } }
     ]
   },
 
@@ -571,7 +598,15 @@ window.SITE_PAGES = [
       { name: { en: "Slator coverage", zh: "Slator 產業報導" },
         type: { en: "Reviews", zh: "評價" },
         desc: { en: "Language-industry coverage of the long-form model.", zh: "語言產業媒體對長語音模型的報導。" },
-        url: "https://slator.com/microsoft-research-vibevoice-long-form-speech-synthesis/" }
+        url: "https://slator.com/microsoft-research-vibevoice-long-form-speech-synthesis/" },
+      { name: { en: "OpenAI — next-gen audio models", zh: "OpenAI — 新一代語音模型" },
+        type: { en: "Compared", zh: "對比" },
+        desc: { en: "gpt-4o-transcribe and gpt-4o-mini-tts announcement.", zh: "gpt-4o-transcribe 與 gpt-4o-mini-tts 發表說明。" },
+        url: "https://openai.com/index/introducing-our-next-generation-audio-models/" },
+      { name: { en: "OpenAI — gpt-realtime", zh: "OpenAI — gpt-realtime" },
+        type: { en: "Compared", zh: "對比" },
+        desc: { en: "OpenAI's production realtime speech-to-speech models.", zh: "OpenAI 產品級即時語音對語音模型。" },
+        url: "https://openai.com/index/introducing-gpt-realtime/" }
     ]
   }
 
