@@ -20,7 +20,7 @@
 
 - 🌏 **雙語全頁切換** — 中文 / English 一鍵切換，整站（含導覽、圖表、表格）即時重繪
 - 🌗 **深色 / 淺色模式** — 預設深色科技感，可手動切換，選擇會被記住
-- 🧭 **多頁面導覽** — 11 個面向各自一頁，共用同一套頂部列與跨頁導覽
+- 🧭 **多頁面導覽** — 12 個面向各自一頁，共用同一套頂部列與跨頁導覽
 - 🔍 **即時搜尋** — 模型家族、限制 FAQ、資源頁皆可輸入關鍵字過濾
 - 🏷️ **分類篩選** — 依模型類型 / 資源類別快速篩選
 - 📊 **資料視覺化** — 純 SVG 長條圖與折線圖，無第三方圖表函式庫
@@ -40,7 +40,8 @@ vibevoice-intro/
 ├── versions.html       # 版本比較（三版本並列矩陣）
 ├── architecture.html   # 技術架構（7.5Hz tokenizer + next-token diffusion）
 ├── specs.html          # 規格與數據（圖表 + 完整規格表）
-├── compare.html        # 競品比較（vs ElevenLabs / XTTS-v2 / F5-TTS）
+├── compare.html        # 語音合成對比（vs ElevenLabs / F5-TTS / XTTS-v2 / SparkTTS / CosyVoice 2）
+├── compare-asr.html    # 語音辨識對比（vs FunASR / Whisper）
 ├── reviews.html        # 社群評價（網路評測/口碑彙整 + 對比）
 ├── usecases.html       # 應用場景
 ├── timeline.html       # 發展時間軸

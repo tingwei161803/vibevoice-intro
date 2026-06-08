@@ -251,28 +251,57 @@ window.SITE_PAGES = [
     }
   },
 
-  /* ===================== 5. COMPARE (comparison) ===================== */
+  /* ===================== 5. COMPARE — TTS (comparison) ===================== */
   {
     slug: "compare", layout: "comparison", icon: "balance",
-    title: { en: "How it compares", zh: "競品比較" },
+    title: { en: "TTS comparison", zh: "語音合成對比" },
     subtitle: {
-      en: "VibeVoice next to popular TTS options. A fair, non-exhaustive sketch — strengths differ by use case.",
-      zh: "VibeVoice 與常見 TTS 方案的並列比較。屬概略、非窮盡的整理——各方強項依使用情境而異。"
+      en: "VibeVoice next to popular and open-source TTS models. A fair, non-exhaustive sketch — strengths differ by use case.",
+      zh: "VibeVoice 與常見及開源 TTS 模型的並列比較。屬概略、非窮盡的整理——各方強項依使用情境而異。"
     },
     plans: [
       { key: "vv",    name: { en: "VibeVoice",   zh: "VibeVoice" },   price: { en: "MIT · open", zh: "MIT · 開源" }, highlight: true, note: { en: "self-hosted", zh: "可自架" } },
-      { key: "el",    name: { en: "ElevenLabs",  zh: "ElevenLabs" },  price: { en: "$99+/mo",    zh: "$99+/月" },                 note: { en: "cloud SaaS", zh: "雲端 SaaS" } },
-      { key: "xtts",  name: { en: "XTTS-v2",     zh: "XTTS-v2" },     price: { en: "open",       zh: "開源" },                     note: { en: "Coqui", zh: "Coqui" } },
-      { key: "f5",    name: { en: "F5-TTS",      zh: "F5-TTS" },      price: { en: "open",       zh: "開源" },                     note: { en: "single-shot", zh: "單句強" } }
+      { key: "el",    name: { en: "ElevenLabs",  zh: "ElevenLabs" },  price: { en: "$99+/mo",    zh: "$99+/月" },   note: { en: "cloud SaaS", zh: "雲端 SaaS" } },
+      { key: "f5",    name: { en: "F5-TTS",      zh: "F5-TTS" },      price: { en: "open",       zh: "開源" },       note: { en: "single-shot", zh: "單句強" } },
+      { key: "xtts",  name: { en: "XTTS-v2",     zh: "XTTS-v2" },     price: { en: "open",       zh: "開源" },       note: { en: "Coqui", zh: "Coqui" } },
+      { key: "spark", name: { en: "SparkTTS",    zh: "SparkTTS" },    price: { en: "open",       zh: "開源" },       note: { en: "0.5B · clone", zh: "0.5B 複製" } },
+      { key: "cosy",  name: { en: "CosyVoice 2", zh: "CosyVoice 2" }, price: { en: "Apache-2.0", zh: "Apache-2.0" }, note: { en: "Alibaba · stream", zh: "Alibaba 串流" } }
     ],
     features: [
-      { label: { en: "Multi-speaker consistency", zh: "多語者長對話一致性" }, values: { vv: true, el: true, xtts: false, f5: false } },
-      { label: { en: "90-minute single pass",     zh: "單次最長 90 分鐘" }, values: { vv: true, el: false, xtts: false, f5: false } },
-      { label: { en: "Self-host / local",         zh: "自架 / 本地部署" }, values: { vv: true, el: false, xtts: true, f5: true } },
-      { label: { en: "Open license",              zh: "開源授權" }, values: { vv: { en: "MIT", zh: "MIT" }, el: false, xtts: { en: "Non-commercial", zh: "非商用" }, f5: { en: "Open", zh: "開源" } } },
-      { label: { en: "Real-time streaming",       zh: "即時串流（低延遲）" }, values: { vv: true, el: true, xtts: false, f5: false } },
-      { label: { en: "Top single-utterance",      zh: "頂尖單句音質" }, values: { vv: { en: "Great", zh: "很好" }, el: true, xtts: false, f5: true } },
-      { label: { en: "Commercial-ready",          zh: "開箱即可商用" }, values: { vv: { en: "Research", zh: "研究用" }, el: true, xtts: false, f5: { en: "DIY", zh: "自評" } } }
+      { label: { en: "Multi-speaker consistency", zh: "多語者長對話一致性" }, values: { vv: true, el: true, f5: false, xtts: false, spark: false, cosy: false } },
+      { label: { en: "90-minute single pass",     zh: "單次最長 90 分鐘" },   values: { vv: true, el: false, f5: false, xtts: false, spark: false, cosy: false } },
+      { label: { en: "Real-time streaming",       zh: "即時串流（低延遲）" }, values: { vv: true, el: true, f5: false, xtts: false, spark: false, cosy: true } },
+      { label: { en: "Zero-shot voice clone",     zh: "零樣本聲音複製" },     values: { vv: { en: "via ref", zh: "參考音" }, el: true, f5: true, xtts: true, spark: true, cosy: true } },
+      { label: { en: "Language breadth",          zh: "語言廣度" },           values: { vv: { en: "EN / ZH", zh: "英 / 中" }, el: { en: "Multi", zh: "多語" }, f5: { en: "EN / ZH", zh: "英 / 中" }, xtts: { en: "17", zh: "17 種" }, spark: { en: "EN / ZH", zh: "英 / 中" }, cosy: { en: "Multi", zh: "多語" } } },
+      { label: { en: "Self-host / local",         zh: "自架 / 本地部署" },     values: { vv: true, el: false, f5: true, xtts: true, spark: true, cosy: true } },
+      { label: { en: "Open license",              zh: "開源授權" },           values: { vv: { en: "MIT", zh: "MIT" }, el: false, f5: { en: "Open", zh: "開源" }, xtts: { en: "Non-commercial", zh: "非商用" }, spark: { en: "Open", zh: "開源" }, cosy: { en: "Apache-2.0", zh: "Apache-2.0" } } },
+      { label: { en: "Top single-utterance",      zh: "頂尖單句音質" },       values: { vv: { en: "Great", zh: "很好" }, el: true, f5: true, xtts: false, spark: { en: "Good", zh: "不錯" }, cosy: true } },
+      { label: { en: "Commercial-ready",          zh: "開箱即可商用" },       values: { vv: { en: "Research", zh: "研究用" }, el: true, f5: { en: "DIY", zh: "自評" }, xtts: false, spark: { en: "DIY", zh: "自評" }, cosy: true } }
+    ]
+  },
+
+  /* ===================== 5a. COMPARE — ASR (comparison) ===================== */
+  {
+    slug: "compare-asr", layout: "comparison", icon: "hearing",
+    title: { en: "ASR comparison", zh: "語音辨識對比" },
+    subtitle: {
+      en: "VibeVoice-ASR next to FunASR and Whisper — open-source speech-to-text, side by side.",
+      zh: "VibeVoice-ASR 與 FunASR、Whisper 的並列比較——開源語音辨識並排看。"
+    },
+    plans: [
+      { key: "vv",      name: { en: "VibeVoice-ASR", zh: "VibeVoice-ASR" }, price: { en: "7B", zh: "7B" }, highlight: true, note: { en: "long-form", zh: "長音訊" } },
+      { key: "funasr",  name: { en: "FunASR",        zh: "FunASR" },        price: { en: "open", zh: "開源" }, note: { en: "Alibaba", zh: "Alibaba" } },
+      { key: "whisper", name: { en: "Whisper",       zh: "Whisper" },       price: { en: "open", zh: "開源" }, note: { en: "OpenAI", zh: "OpenAI" } }
+    ],
+    features: [
+      { label: { en: "Open license",            zh: "開源授權" },     values: { vv: { en: "MIT", zh: "MIT" }, funasr: { en: "MIT", zh: "MIT" }, whisper: { en: "MIT", zh: "MIT" } } },
+      { label: { en: "Long-form single pass",   zh: "單次長音訊" },   values: { vv: { en: "60 min", zh: "60 分鐘" }, funasr: true, whisper: { en: "chunked", zh: "分段處理" } } },
+      { label: { en: "Speaker diarization",     zh: "語者標註" },     values: { vv: true, funasr: true, whisper: false } },
+      { label: { en: "Timestamps",              zh: "時間戳" },       values: { vv: true, funasr: true, whisper: true } },
+      { label: { en: "Streaming / real-time",   zh: "串流 / 即時" },  values: { vv: false, funasr: true, whisper: false } },
+      { label: { en: "Languages",               zh: "語言" },         values: { vv: { en: "50+", zh: "50+" }, funasr: { en: "50+", zh: "50+" }, whisper: { en: "~99", zh: "~99" } } },
+      { label: { en: "Speed",                   zh: "速度" },         values: { vv: { en: "60-min pass", zh: "單次 60 分" }, funasr: { en: "up to 170x", zh: "最高 170x" }, whisper: { en: "baseline", zh: "基準" } } },
+      { label: { en: "Self-host / local",       zh: "自架 / 本地部署" }, values: { vv: true, funasr: true, whisper: true } }
     ]
   },
 
