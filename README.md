@@ -10,7 +10,7 @@
 
 | | |
 |---|---|
-| 🌐 網站 | <https://tingwei161803.github.io/vibevoice-intro/> |
+| 🌐 網站 | <https://vibevoice-intro.peteraim.com/> |
 
 > 直接點進去就能用，無需安裝。每一頁都有獨立網址，方便分享（例如「模型家族」頁可直接連到 `…/models.html`）。
 
