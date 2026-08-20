@@ -3,6 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <title>技術架構｜VibeVoice</title>
+<meta property="og:url" content="https://vibevoice-intro.peteraim.com/architecture.html" />
+<link rel="canonical" href="https://vibevoice-intro.peteraim.com/architecture.html" />
 
   <!-- Google tag (gtag.js) -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-J55E0F9SH9"></script>
@@ -24,7 +26,15 @@
   <link rel="stylesheet" href="assets/styles.css" />
 </head>
 <body data-page="architecture">
-  <main id="page"></main>
+  <main id="page">
+<div class="reading-progress" id="readingProgress" aria-hidden="true" style="width: 0%;"></div><header class="page-head"><h1>技術架構</h1><p class="page-head__sub">7.5 Hz tokenizer 加上 next-token diffusion：VibeVoice 如何把 90 分鐘音訊塞進 64K 脈絡。</p></header><div class="article-layout"><nav class="toc" aria-label="Contents"><div class="toc__inner"><a class="toc-link toc-link--active" href="#idea" data-toc="idea">核心構想</a><a class="toc-link" href="#tokenizer" data-toc="tokenizer">連續 7.5 Hz tokenizer</a><a class="toc-link" href="#diffusion" data-toc="diffusion">Next-token diffusion</a><a class="toc-link" href="#tradeoffs" data-toc="tradeoffs">繼承與限制</a></div></nav><div class="article-body prose"><section class="article-section in" id="idea" data-item="" aria-labelledby="idea-h"><h2 id="idea-h">核心構想</h2><p>多數神經語音合成系統以 50–100 Hz 將音訊 token 化，這種精細度代價高昂：90 分鐘語音會變成 135,000 個以上的 token，遠超出實用的脈絡長度。VibeVoice 的關鍵賭注是——可以用更粗的 7.5 Hz 來 token 化，再讓 diffusion 模型把聲學細節「補繪」回來。</p><blockquote>壓縮的是時間軸，不是語意：7.5 Hz 維持對話連貫，由 diffusion head 還原 24 kHz 的聲音細節。</blockquote></section><section class="article-section in" id="tokenizer" data-item="" aria-labelledby="tokenizer-h"><h2 id="tokenizer-h">連續 7.5 Hz tokenizer</h2><p>VibeVoice 採用連續語音 tokenizer——分為聲學（acoustic）與語意（semantic）兩條流——以 7.5 Hz 的影格率運作。正是這個低取樣率，讓長序列處理變得可行，同時保留足夠資訊還原自然語音。</p><h3>為什麼 7.5 Hz 是關鍵</h3><ul><li>比業界常見的 50–100 Hz 粗約 10 倍。</li><li>90 分鐘音訊約 40,500 token——可放進 64K 脈絡。</li><li>token 變少，模型把算力花在對話連貫，而非聲學細節。</li></ul></section><section class="article-section" id="diffusion" data-item="" aria-labelledby="diffusion-h"><h2 id="diffusion-h">Next-token diffusion</h2><p>生成管線分為兩段。大型語言模型（Qwen2.5 主幹）在 token 層級處理文字脈絡、對話理解與韻律決策；接著由 diffusion head 為每一步還原精細的 24 kHz 聲學細節。</p><pre><code>文字 + 語者參考音
+      |
+      v
+[ LLM 主幹 (Qwen2.5) ]   -&gt;  7.5 Hz 的語意／韻律 token
+      |
+      v
+[ diffusion head ]        -&gt;  24 kHz 聲學波形</code></pre><p>這種「分工」正是單一模型能撐起長篇多語者對話的原因：LLM 負責記住「誰在說、接下來說什麼」，diffusion head 則專注於「聽起來如何」。</p></section><section class="article-section" id="tradeoffs" data-item="" aria-labelledby="tradeoffs-h"><h2 id="tradeoffs-h">繼承與限制</h2><p>由於主幹建立在 Qwen2.5 之上，模型會繼承其基礎行為——包含偶爾出現非預期、帶偏見或不準確的輸出。架構也是為乾淨、依序的對話而調校：它無法處理重疊發話、背景音樂或音效。</p><p>確切數據見「規格與數據」頁；負責任 AI 的指引見「限制與負責任 AI」頁。</p></section></div></div>
+</main>
   <script src="data/data.js"></script>
   <script src="assets/shell.js"></script>
   <script src="assets/app.js"></script>

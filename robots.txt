@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://vibevoice-intro.peteraim.com/sitemap.xml
