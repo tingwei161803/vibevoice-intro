@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <title>Specs &amp; numbers · VibeVoice</title>
+<meta property="og:url" content="https://vibevoice-intro.peteraim.com/en/specs.html" />
+<link rel="canonical" href="https://vibevoice-intro.peteraim.com/en/specs.html" />
+  <link rel="alternate" hreflang="zh-Hant" href="https://vibevoice-intro.peteraim.com/specs.html" />
+  <link rel="alternate" hreflang="en" href="https://vibevoice-intro.peteraim.com/en/specs.html" />
+  <link rel="alternate" hreflang="x-default" href="https://vibevoice-intro.peteraim.com/specs.html" />
+
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-J55E0F9SH9"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-J55E0F9SH9');
+  </script>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="description" content="VibeVoice 關鍵規格與數據：7.5Hz 取樣、64K 脈絡、24kHz 輸出、token 效率與各版本完整規格表。" />
+  <meta name="theme-color" content="#0a0a0f" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Sora:wght@400;500;600;700&family=Noto+Sans+TC:wght@400;500;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../assets/styles.css" />
+</head>
+<body data-page="specs">
+  <main id="page">
+<header class="page-head"><h1>Specs &amp; numbers</h1><p class="page-head__sub">The headline figures behind VibeVoice, plus a full per-model spec table.</p></header><div class="stat-grid"><div class="stat-card in" data-item=""><span class="stat-label">Frame rate</span><b class="stat-value">7.5 <span class="stat-unit">Hz</span></b></div><div class="stat-card in" data-item=""><span class="stat-label">Context (TTS/ASR)</span><b class="stat-value">64 <span class="stat-unit">K tokens</span></b></div><div class="stat-card in" data-item=""><span class="stat-label">Audio output</span><b class="stat-value">24 <span class="stat-unit">kHz</span></b></div><div class="stat-card in" data-item=""><span class="stat-label">Realtime latency</span><b class="stat-value">~300 <span class="stat-unit">ms</span></b></div></div><div class="panel-grid"><figure class="panel in" data-item=""><figcaption>Tokens for 90 minutes of audio</figcaption><div class="chart-wrap"><svg viewBox="0 0 520 240" role="img" preserveAspectRatio="xMidYMid meet" aria-label="bar chart"><line class="axis-line" x1="16" y1="196" x2="504" y2="196"></line><rect class="bar-rect" x="16" y="16" width="237" height="180" rx="5"><title>Traditional 50–100 Hz: 135000</title></rect><text class="bar-value" x="134.5" y="10" text-anchor="middle">135000</text><text class="bar-label" x="134.5" y="214" text-anchor="middle">Traditional 50–100 Hz</text><rect class="bar-rect" x="267" y="142" width="237" height="54" rx="5"><title>VibeVoice 7.5 Hz: 40500</title></rect><text class="bar-value" x="385.5" y="136" text-anchor="middle">40500</text><text class="bar-label" x="385.5" y="214" text-anchor="middle">VibeVoice 7.5 Hz</text></svg></div></figure><figure class="panel in" data-item=""><figcaption>Parameters by model (billions)</figcaption><div class="chart-wrap"><svg viewBox="0 0 520 240" role="img" preserveAspectRatio="xMidYMid meet" aria-label="line chart"><path class="line-area" d="M28 194.29 L266 166.86 L504 16 L504 208 L28 208 Z"></path><path class="line-path" d="M28 194.29 L266 166.86 L504 16" fill="none"></path><circle class="line-dot" cx="28" cy="194.29" r="3"><title>Realtime: 0.5</title></circle><circle class="line-dot" cx="266" cy="166.86" r="3"><title>TTS: 1.5</title></circle><circle class="line-dot" cx="504" cy="16" r="3"><title>ASR: 7</title></circle><text class="bar-label" x="28" y="228" text-anchor="middle">Realtime</text><text class="bar-label" x="266" y="228" text-anchor="middle">TTS</text><text class="bar-label" x="504" y="228" text-anchor="middle">ASR</text></svg></div></figure></div><div class="panel panel--wide in" data-item=""><div class="table-wrap"><table class="data-table"><thead><tr><th>Spec</th><th>Realtime-0.5B</th><th>TTS-1.5B</th><th>ASR-7B</th></tr></thead><tbody><tr data-item="" class="in"><td>Parameters</td><td>0.5B</td><td>1.5B</td><td>7B</td></tr><tr data-item="" class="in"><td>Max output</td><td>~10 min</td><td>90 min</td><td>60 min</td></tr><tr data-item="" class="in"><td>Speakers</td><td>1</td><td>up to 4</td><td>— (recognition)</td></tr><tr data-item="" class="in"><td>Context</td><td>8K</td><td>64K</td><td>64K</td></tr><tr data-item="" class="in"><td>Languages</td><td>Multilingual voices</td><td>EN / ZH first</td><td>50+ languages</td></tr><tr data-item="" class="in"><td>First latency</td><td>~300 ms</td><td>—</td><td>—</td></tr><tr data-item="" class="in"><td>Role</td><td>Real-time streaming</td><td>Long-form synthesis</td><td>Long-form recognition</td></tr></tbody></table></div></div>
+</main>
+  <script src="../data/data.js"></script>
+  <script src="../assets/shell.js"></script>
+  <script src="../assets/app.js"></script>
+<p class="lang-alt-link" style="text-align:center;padding:12px;"><a href="/specs.html" hreflang="zh-Hant" rel="alternate" lang="zh-Hant">中文版</a></p>
+</body>
+</html>

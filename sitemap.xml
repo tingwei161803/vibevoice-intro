@@ -5,6 +5,9 @@
 -->
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
+    <loc>https://vibevoice-intro.peteraim.com/</loc>
+  </url>
+  <url>
     <loc>https://vibevoice-intro.peteraim.com/architecture.html</loc>
   </url>
   <url>
@@ -17,10 +20,46 @@
     <loc>https://vibevoice-intro.peteraim.com/compare.html</loc>
   </url>
   <url>
-    <loc>https://vibevoice-intro.peteraim.com/faq.html</loc>
+    <loc>https://vibevoice-intro.peteraim.com/en/</loc>
   </url>
   <url>
-    <loc>https://vibevoice-intro.peteraim.com/</loc>
+    <loc>https://vibevoice-intro.peteraim.com/en/architecture.html</loc>
+  </url>
+  <url>
+    <loc>https://vibevoice-intro.peteraim.com/en/compare-asr.html</loc>
+  </url>
+  <url>
+    <loc>https://vibevoice-intro.peteraim.com/en/compare-realtime.html</loc>
+  </url>
+  <url>
+    <loc>https://vibevoice-intro.peteraim.com/en/compare.html</loc>
+  </url>
+  <url>
+    <loc>https://vibevoice-intro.peteraim.com/en/faq.html</loc>
+  </url>
+  <url>
+    <loc>https://vibevoice-intro.peteraim.com/en/models.html</loc>
+  </url>
+  <url>
+    <loc>https://vibevoice-intro.peteraim.com/en/resources.html</loc>
+  </url>
+  <url>
+    <loc>https://vibevoice-intro.peteraim.com/en/reviews.html</loc>
+  </url>
+  <url>
+    <loc>https://vibevoice-intro.peteraim.com/en/specs.html</loc>
+  </url>
+  <url>
+    <loc>https://vibevoice-intro.peteraim.com/en/timeline.html</loc>
+  </url>
+  <url>
+    <loc>https://vibevoice-intro.peteraim.com/en/usecases.html</loc>
+  </url>
+  <url>
+    <loc>https://vibevoice-intro.peteraim.com/en/versions.html</loc>
+  </url>
+  <url>
+    <loc>https://vibevoice-intro.peteraim.com/faq.html</loc>
   </url>
   <url>
     <loc>https://vibevoice-intro.peteraim.com/models.html</loc>

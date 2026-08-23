@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <title>How it works · VibeVoice</title>
+<meta property="og:url" content="https://vibevoice-intro.peteraim.com/en/architecture.html" />
+<link rel="canonical" href="https://vibevoice-intro.peteraim.com/en/architecture.html" />
+  <link rel="alternate" hreflang="zh-Hant" href="https://vibevoice-intro.peteraim.com/architecture.html" />
+  <link rel="alternate" hreflang="en" href="https://vibevoice-intro.peteraim.com/en/architecture.html" />
+  <link rel="alternate" hreflang="x-default" href="https://vibevoice-intro.peteraim.com/architecture.html" />
+
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-J55E0F9SH9"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-J55E0F9SH9');
+  </script>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="description" content="VibeVoice 技術架構：7.5Hz 連續語音 tokenizer、LLM 主幹（Qwen2.5）+ diffusion head 的 next-token diffusion 兩段式管線。" />
+  <meta name="theme-color" content="#0a0a0f" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Sora:wght@400;500;600;700&family=Noto+Sans+TC:wght@400;500;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../assets/styles.css" />
+</head>
+<body data-page="architecture">
+  <main id="page">
+<div class="reading-progress" id="readingProgress" aria-hidden="true" style="width: 0%;"></div><header class="page-head"><h1>How it works</h1><p class="page-head__sub">A 7.5 Hz tokenizer plus next-token diffusion: how VibeVoice fits 90 minutes of audio inside a 64K context.</p></header><div class="article-layout"><nav class="toc" aria-label="Contents"><div class="toc__inner"><a class="toc-link toc-link--active" href="#idea" data-toc="idea">The core idea</a><a class="toc-link" href="#tokenizer" data-toc="tokenizer">Continuous 7.5 Hz tokenizers</a><a class="toc-link" href="#diffusion" data-toc="diffusion">Next-token diffusion</a><a class="toc-link" href="#tradeoffs" data-toc="tradeoffs">What it inherits and what it can't do</a></div></nav><div class="article-body prose"><section class="article-section in" id="idea" data-item="" aria-labelledby="idea-h"><h2 id="idea-h">The core idea</h2><p>Most neural TTS systems tokenize audio at 50–100 Hz. That fidelity is expensive: 90 minutes of speech becomes 135,000+ tokens, far beyond a practical context window. VibeVoice's central bet is that you can tokenize far more coarsely — at 7.5 Hz — and let a diffusion model paint back the acoustic detail.</p><blockquote>Compress the timeline, not the meaning: 7.5 Hz keeps the dialogue coherent while a diffusion head restores 24 kHz detail.</blockquote></section><section class="article-section in" id="tokenizer" data-item="" aria-labelledby="tokenizer-h"><h2 id="tokenizer-h">Continuous 7.5 Hz tokenizers</h2><p>VibeVoice uses continuous speech tokenizers — an acoustic and a semantic stream — running at a 7.5 Hz frame rate. The low rate is what makes long-sequence processing tractable while preserving enough information to reconstruct natural speech.</p><h3>Why 7.5 Hz matters</h3><ul><li>~10× coarser than the 50–100 Hz industry norm.</li><li>90 minutes of audio ≈ 40,500 tokens — it fits a 64K context.</li><li>Fewer tokens means the model spends capacity on dialogue, not acoustic minutiae.</li></ul></section><section class="article-section in" id="diffusion" data-item="" aria-labelledby="diffusion-h"><h2 id="diffusion-h">Next-token diffusion</h2><p>The generation pipeline has two stages. A large language model (a Qwen2.5 backbone) handles textual context, dialogue understanding and prosodic decisions at the token level. A diffusion head then reconstructs the fine 24 kHz acoustic detail for each step.</p><pre><code>text + speaker refs
+      |
+      v
+[ LLM backbone (Qwen2.5) ]  -&gt;  semantic / prosody tokens @ 7.5 Hz
+      |
+      v
+[ diffusion head ]          -&gt;  24 kHz acoustic waveform</code></pre><p>This separation of concerns is why a single model can hold a long, multi-speaker conversation together: the LLM keeps track of who is speaking and what comes next, and the diffusion head worries about how it sounds.</p></section><section class="article-section in" id="tradeoffs" data-item="" aria-labelledby="tradeoffs-h"><h2 id="tradeoffs-h">What it inherits and what it can't do</h2><p>Because the backbone is built on Qwen2.5, the model can inherit its base behaviours — including occasionally unexpected, biased or inaccurate output. And the design is tuned for clean, sequential dialogue: it does not handle overlapping speech, background music or sound effects.</p><p>See the Specs page for the exact numbers, or Limitations for the responsible-AI guidance.</p></section></div></div>
+</main>
+  <script src="../data/data.js"></script>
+  <script src="../assets/shell.js"></script>
+  <script src="../assets/app.js"></script>
+<p class="lang-alt-link" style="text-align:center;padding:12px;"><a href="/architecture.html" hreflang="zh-Hant" rel="alternate" lang="zh-Hant">中文版</a></p>
+</body>
+</html>
