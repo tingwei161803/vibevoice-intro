@@ -34,6 +34,16 @@
     var pageEl = document.getElementById("page");
     var teardowns = [];   // observers / listeners to disconnect before each repaint
 
+    /* A tag is either a bilingual { en, zh } pair or a plain string when it is
+       the same in both languages (a model size, a unit, a publication name).
+       t() passes plain strings straight through, so both shapes work. */
+    function tagStrip(tags) {
+      var out = (tags || []).map(function (g) {
+        return '<span class="tag">' + esc(t(g)) + "</span>";
+      }).join("");
+      return out ? '<div class="card__tags">' + out + "</div>" : "";
+    }
+
     /* ---------- shared bits ---------- */
     function head(p) {
       var sub = t(p.subtitle)
@@ -227,10 +237,9 @@
       kanban: function (p) {
         var cols = (p.columns || []).map(function (col) {
           var cards = (p.cards || []).filter(function (c) { return c.column === col.key; }).map(function (c) {
-            var tags = (c.tags || []).map(function (g) { return '<span class="tag">' + esc(g) + "</span>"; }).join("");
             return '<article class="kb-card" data-item><h3 class="kb-card__title">' + esc(t(c.title)) + "</h3>" +
               (t(c.body) ? '<p class="kb-card__body">' + esc(t(c.body)) + "</p>" : "") +
-              (tags ? '<div class="card__tags">' + tags + "</div>" : "") + "</article>";
+              tagStrip(c.tags) + "</article>";
           }).join("");
           var count = (p.cards || []).filter(function (c) { return c.column === col.key; }).length;
           return '<div class="kb-col"><div class="kb-col__head">' + esc(t(col.label)) +
@@ -329,18 +338,18 @@
         function matches(item) {
           if (st.cat && item.category !== st.cat) return false;
           if (!st.q) return true;
-          var hay = (t(item.title) + " " + t(item.summary) + " " + (item.tags || []).join(" ")).toLowerCase();
+          var hay = (t(item.title) + " " + t(item.summary) + " " +
+            (item.tags || []).map(t).join(" ")).toLowerCase();
           return hay.indexOf(st.q) !== -1;
         }
         function paint() {
           var rows = (p.items || []).filter(matches);
           grid.innerHTML = rows.map(function (item) {
-            var tags = (item.tags || []).map(function (g) { return '<span class="tag">' + esc(g) + "</span>"; }).join("");
             return '<article class="card" tabindex="0" role="button" data-item data-slug="' + esc(item.slug) + '" ' +
               'aria-label="' + esc(t(item.title)) + '">' +
               '<h3 class="card__title">' + esc(t(item.title)) + "</h3>" +
               '<p class="card__summary">' + esc(t(item.summary)) + "</p>" +
-              (tags ? '<div class="card__tags">' + tags + "</div>" : "") + "</article>";
+              tagStrip(item.tags) + "</article>";
           }).join("");
           if (count) count.textContent = rows.length + (L.state.lang === "en" ? " result(s)" : " 筆結果");
           wireCards();
@@ -360,9 +369,8 @@
         function openItem(slug) {
           var item = findItem(slug); if (!item) return;
           var dlg = L.dialog(), body = document.getElementById("dialogBody");
-          var tags = (item.tags || []).map(function (g) { return '<span class="tag">' + esc(g) + "</span>"; }).join("");
           body.innerHTML = '<h2 id="dialogTitle">' + esc(t(item.title)) + "</h2>" +
-            (tags ? '<div class="card__tags">' + tags + "</div>" : "") +
+            tagStrip(item.tags) +
             "<p>" + esc(t(item.overview) || t(item.summary)) + "</p>";
           if (!dlg.open) dlg.showModal();
           if (location.hash.slice(1) !== slug) history.replaceState(null, "", "#" + slug);

@@ -10,7 +10,8 @@
    跨頁 nav 依此陣列順序排列。
 
    內容彙整自 microsoft/VibeVoice 專案說明與公開技術介紹文章，為非官方的
-   學習整理；所有人類可見字串皆為 {en,zh} 物件，語言切換時整站重繪。
+   學習整理；人類可見字串一律寫成 {en,zh} 物件，兩種語言各有自己的網址。
+   兩邊字面相同的值（模型大小、單位、刊物名）才留純字串。
    ========================================================================= */
 
 window.SITE_META = {
@@ -63,7 +64,7 @@ window.SITE_PAGES = [
           en: "Long-form multi-speaker synthesis: up to 90 minutes and 4 distinct speakers in a single generation.",
           zh: "長語音多語者合成：單次最長 90 分鐘、最多 4 位語者，音色維持一致。"
         },
-        tags: ["1.5B", "90 min", "4 speakers", "EN / ZH"],
+        tags: ["1.5B", { en: "90 min", zh: "90 分鐘" }, { en: "4 speakers", zh: "4 位語者" }, "EN / ZH"],
         overview: {
           en: "The flagship text-to-speech model. Built on a Qwen2.5-1.5B LLM backbone plus a diffusion head, it generates up to 90 minutes of expressive, conversational audio with as many as 4 speakers while keeping each voice consistent. English and Chinese are the most reliable languages. The training/inference code was removed in September 2025 over misuse concerns, but the weights remain on Hugging Face. The work was accepted as an ICLR 2026 Oral.",
           zh: "旗艦級語音合成模型。以 Qwen2.5-1.5B 作為 LLM 主幹、搭配 diffusion head，單次可生成最長 90 分鐘、最多 4 位語者的富表現力對談式語音，並維持每個語者音色一致。英文與中文最為穩定。訓練／推論程式碼於 2025 年 9 月因濫用疑慮被移除，但權重仍保留在 Hugging Face。此研究獲 ICLR 2026 Oral 接受。"
@@ -76,7 +77,7 @@ window.SITE_PAGES = [
           en: "Long-form recognition: 60 minutes in one pass, with who / when / what — speaker, timestamp and content.",
           zh: "長音訊辨識：單次 60 分鐘，輸出「誰、何時、說了什麼」——語者、時間戳與內容。"
         },
-        tags: ["7B", "60 min", "50+ languages", "64K"],
+        tags: ["7B", { en: "60 min", zh: "60 分鐘" }, { en: "50+ languages", zh: "50+ 種語言" }, "64K"],
         overview: {
           en: "The speech-to-text member of the family. It transcribes up to 60 minutes of audio in a single pass and produces structured output with speaker identity (who), timestamps (when) and content (what). It is natively multilingual across 50+ languages, supports custom hotwords for domain accuracy, and uses a 64K token context. Released January 2026 and integrated into Hugging Face Transformers in March 2026; ASR fine-tuning code is available.",
           zh: "家族中的語音辨識成員。單次可轉寫最長 60 分鐘音訊，並輸出帶有語者身分（誰）、時間戳（何時）與內容（說了什麼）的結構化結果。原生支援 50+ 種語言，可自訂 hotword 提升專業領域準確度，脈絡長度達 64K token。2026 年 1 月發表，3 月併入 Hugging Face Transformers；另提供 ASR finetune 程式碼。"
@@ -89,7 +90,7 @@ window.SITE_PAGES = [
           en: "Lightweight streaming: ~300 ms first-audio latency, streaming text input, robust to ~10 minutes.",
           zh: "輕量即時串流：首字延遲約 300 毫秒，支援串流文字輸入，可穩定生成約 10 分鐘。"
         },
-        tags: ["0.5B", "~300 ms", "streaming", "multilingual"],
+        tags: ["0.5B", "~300 ms", { en: "streaming", zh: "串流" }, { en: "multilingual", zh: "多語" }],
         overview: {
           en: "The smallest, deployment-friendly model for real-time use. It accepts streaming text and starts speaking with roughly 300 ms of first-audio latency, generating robustly up to about 10 minutes. Beyond English styles it offers multilingual voices (DE, FR, IT, JP, KR, NL, PL, PT, ES). An experimental speaker expansion landed in December 2025, and a Colab demo is available.",
           zh: "家族中最小、最適合部署的即時模型。可接收串流文字輸入，首字延遲約 300 毫秒即開始發聲，能穩定生成約 10 分鐘。除英文音色外，另提供多語語音（德、法、義、日、韓、荷、波、葡、西）。2025 年 12 月加入實驗性語者擴充，並提供 Colab 範例。"
@@ -350,7 +351,7 @@ window.SITE_PAGES = [
         slug: "rev-longform", category: "praise",
         title: { en: "A genuine long-form breakthrough", zh: "長篇多語者的真突破" },
         summary: { en: "Reviewers widely call 90-min, 4-speaker dialogue a real step change.", zh: "評測普遍認為單次 90 分鐘、4 語者長對話是真正的躍進。" },
-        tags: ["長語音", "Slator", "好評"],
+        tags: [{ en: "Long-form", zh: "長語音" }, "Slator", { en: "Praise", zh: "好評" }],
         overview: {
           en: "Industry and review coverage (e.g. Slator, AllAboutAI) frames VibeVoice as moving long-form, multi-speaker speech from short-clip 'gimmicks' to genuinely usable long dialogue — best suited to audiobooks and podcasts. Source: Slator / AllAboutAI.",
           zh: "產業與評測報導（如 Slator、AllAboutAI）認為 VibeVoice 把長篇、多語者語音從「短秒數的玩具」推進到可實用的長對話，最適合有聲書與 Podcast。來源：Slator / AllAboutAI。"
@@ -360,7 +361,7 @@ window.SITE_PAGES = [
         slug: "rev-opensource", category: "praise",
         title: { en: "Open, free, self-hostable", zh: "開源、免費、可自架" },
         summary: { en: "Praised for MIT licensing and avoiding subscription/privacy concerns.", zh: "普遍讚賞 MIT 開源、可自架，免去訂閱與隱私疑慮。" },
-        tags: ["開源", "成本", "好評"],
+        tags: [{ en: "Open source", zh: "開源" }, { en: "Cost", zh: "成本" }, { en: "Praise", zh: "好評" }],
         overview: {
           en: "A recurring positive across reviews: the MIT-licensed, self-hostable model removes ElevenLabs-style subscription costs and data-privacy worries, which reviewers weigh heavily for teams shipping a lot of audio. Source: AllAboutAI / Medium.",
           zh: "評論中反覆出現的優點：MIT 授權、可自架，免去 ElevenLabs 式的訂閱成本與資料隱私顧慮——對需要大量產出音訊的團隊特別加分。來源：AllAboutAI / Medium。"
@@ -370,7 +371,7 @@ window.SITE_PAGES = [
         slug: "rev-consistency", category: "praise",
         title: { en: "Speaker consistency & naturalness", zh: "語者一致性與自然度" },
         summary: { en: "HN community credits its voice consistency and conversational naturalness.", zh: "Hacker News 社群肯定其音色一致性與對話自然度。" },
-        tags: ["Hacker News", "自然度", "好評"],
+        tags: ["Hacker News", { en: "Naturalness", zh: "自然度" }, { en: "Praise", zh: "好評" }],
         overview: {
           en: "On Hacker News the general sentiment is positive: commenters highlight high audio fidelity, speaker consistency across long passages, and natural-sounding conversation as a clear leap for open-source audio AI. Source: Hacker News discussion.",
           zh: "在 Hacker News，整體風向偏正面：留言者點出高音訊保真度、長段落的語者一致性，以及自然的對話感，認為是開源語音 AI 的明顯躍進。來源：Hacker News 討論串。"
@@ -380,7 +381,7 @@ window.SITE_PAGES = [
         slug: "rev-expressive", category: "praise",
         title: { en: "67% rate expressiveness higher", zh: "67% 認為表現力更佳" },
         summary: { en: "An AllAboutAI survey: 67% of technical users rate it above Chatterbox-TTS.", zh: "AllAboutAI 調查：67% 技術使用者認為其表現力優於 Chatterbox-TTS。" },
-        tags: ["AllAboutAI", "表現力"],
+        tags: ["AllAboutAI", { en: "Expressiveness", zh: "表現力" }],
         overview: {
           en: "AllAboutAI reports that 67% of surveyed technical users rate VibeVoice's expressiveness as superior to alternatives such as Chatterbox-TTS, and gives it 4/5 overall — strong on open-source long-form audio, weaker on real-time and broad language coverage. Source: AllAboutAI review.",
           zh: "AllAboutAI 指出，受訪技術使用者中有 67% 認為 VibeVoice 的表現力優於 Chatterbox-TTS 等替代方案，整體給 4/5——長篇開源音訊是強項，即時性與語言廣度較弱。來源：AllAboutAI 評測。"
@@ -390,7 +391,7 @@ window.SITE_PAGES = [
         slug: "rev-intonation", category: "critique",
         title: { en: "Intonation still slips", zh: "語調仍有破綻" },
         summary: { en: "An HN user: intonation is off on nearly every phrase, with robotic modulation.", zh: "HN 有使用者指出幾乎每句語調都怪，帶機械感的調變。" },
-        tags: ["Hacker News", "語調", "批評"],
+        tags: ["Hacker News", { en: "Intonation", zh: "語調" }, { en: "Criticism", zh: "批評" }],
         overview: {
           en: "Not everyone is sold: one Hacker News commenter said the voices are decent but the intonation is off on almost every phrase, with a clearly robotic-sounding modulation. A useful reminder that prosody isn't fully solved. Source: Hacker News discussion.",
           zh: "並非一面倒：一位 Hacker News 留言者表示音色尚可，但幾乎每一句的語調都不對，帶有明顯機械感的調變。提醒了韻律仍未完全攻克。來源：Hacker News 討論串。"
@@ -400,7 +401,7 @@ window.SITE_PAGES = [
         slug: "rev-uninspiring", category: "critique",
         title: { en: "Impressive, but not by today's bar", zh: "驚艷，但以今日標準略平" },
         summary: { en: "Some find it impressive vs years ago, yet uninspiring by current standards.", zh: "有人認為相較數年前驚艷，但以今日標準仍嫌不夠出彩。" },
-        tags: ["Hacker News", "批評"],
+        tags: ["Hacker News", { en: "Criticism", zh: "批評" }],
         overview: {
           en: "Another HN take: very impressive compared to TTS from a few years ago, but for today's frontier it felt uninspiring. Expectations have moved fast, and open weights invite head-to-head scrutiny with the best proprietary systems. Source: Hacker News discussion.",
           zh: "另一則 HN 看法：相較數年前的 TTS 非常驚艷，但放到今天的前沿則覺得不夠出彩。期待值上升得很快，且開源權重也讓它直接被拿來和最強的閉源系統比較。來源：Hacker News 討論串。"
@@ -410,7 +411,7 @@ window.SITE_PAGES = [
         slug: "rev-limits", category: "critique",
         title: { en: "Language & feature limits", zh: "語言與功能限制" },
         summary: { en: "Reviews agree: EN/ZH-first, no overlapping speech, music or sound effects.", zh: "評測一致指出：英/中為主，無法處理重疊發話、背景音樂或音效。" },
-        tags: ["限制", "語言", "批評"],
+        tags: [{ en: "Limits", zh: "限制" }, { en: "Languages", zh: "語言" }, { en: "Criticism", zh: "批評" }],
         overview: {
           en: "A consistent critique across reviews: VibeVoice is limited to English and Chinese for best quality and cannot handle overlapping speech, background noise, music or sound effects — and the original release leaned on offline batch rather than real-time use. Source: AllAboutAI / Slator.",
           zh: "評測中一致的批評：VibeVoice 以英文、中文品質最佳，且無法處理重疊發話、背景雜音、音樂或音效；早期版本偏離線批次而非即時使用。來源：AllAboutAI / Slator。"
@@ -420,7 +421,7 @@ window.SITE_PAGES = [
         slug: "rev-bench", category: "vs",
         title: { en: "MOS 4.5 — tops the benchmarks", zh: "MOS 4.5，評測居首" },
         summary: { en: "Per MS's report, the 7B model's MOS beat ElevenLabs v3 and Gemini TTS.", zh: "據微軟技術報告，7B 版 MOS 勝過 ElevenLabs v3 與 Gemini TTS。" },
-        tags: ["評測", "MOS", "對比"],
+        tags: [{ en: "Benchmarks", zh: "評測" }, "MOS", { en: "vs others", zh: "對比" }],
         overview: {
           en: "Microsoft's technical report puts the larger VibeVoice (7B) at a Mean Opinion Score of 4.5±0.1 — the highest in their comparison, ahead of ElevenLabs Eleven-V3 (Alpha) and Google Gemini-2.5-Pro-Preview-TTS, with realism (~3.71) approaching human-level. These are the authors' own benchmarks, so read them alongside independent listening. Source: Microsoft technical report (via AllAboutAI / Slator).",
           zh: "微軟技術報告指出較大的 VibeVoice（7B）平均意見分數（MOS）達 4.5±0.1，為其比較中最高，領先 ElevenLabs Eleven-V3（Alpha）與 Google Gemini-2.5-Pro-Preview-TTS，真實度（約 3.71）接近人類水準。這是作者自家評測，宜與獨立聽測一起參考。來源：微軟技術報告（經 AllAboutAI / Slator 引述）。"
@@ -430,7 +431,7 @@ window.SITE_PAGES = [
         slug: "rev-vs-eleven", category: "vs",
         title: { en: "vs ElevenLabs", zh: "對比 ElevenLabs" },
         summary: { en: "Wins on long-form and cost; ElevenLabs still leads on polish and languages.", zh: "長篇與成本勝出；ElevenLabs 的精緻度與語言廣度仍領先。" },
-        tags: ["ElevenLabs", "對比"],
+        tags: ["ElevenLabs", { en: "vs others", zh: "對比" }],
         overview: {
           en: "The common comparison: VibeVoice wins on long-form multi-speaker output and cost (free, self-hosted), while ElevenLabs still edges ahead on single-clip polish, emotion control and breadth of languages. Pick by workload, not by a single 'best'. Source: review aggregators.",
           zh: "常見的對比：VibeVoice 在長篇多語者輸出與成本（免費、自架）勝出；ElevenLabs 在單段精緻度、情緒控制與語言廣度仍略勝。應依工作負載挑選，而非追求單一「最佳」。來源：各評測彙整。"
@@ -440,7 +441,7 @@ window.SITE_PAGES = [
         slug: "rev-vs-f5", category: "vs",
         title: { en: "vs F5-TTS / XTTS", zh: "對比 F5-TTS / XTTS" },
         summary: { en: "Better long-dialogue consistency; F5 still praised for single-utterance quality.", zh: "長對話一致性更好；F5 的單句音質仍受稱讚。" },
-        tags: ["F5-TTS", "XTTS", "對比"],
+        tags: ["F5-TTS", "XTTS", { en: "vs others", zh: "對比" }],
         overview: {
           en: "Against open peers, the community view is that VibeVoice holds multi-speaker, long-dialogue consistency better than F5-TTS and XTTS-v2, while F5-TTS is still admired for crisp single-utterance quality. VibeVoice trades a little per-clip sharpness for staying coherent over the long haul. Source: community discussion.",
           zh: "與開源同儕相比，社群看法是 VibeVoice 在多語者、長對話的一致性勝過 F5-TTS 與 XTTS-v2；而 F5-TTS 的單句清晰音質仍受稱讚。VibeVoice 以些許單段銳利度，換取長程的一致連貫。來源：社群討論。"
