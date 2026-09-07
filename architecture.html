@@ -19,7 +19,7 @@
   </script>
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <meta name="description" content="VibeVoice 技術架構：7.5Hz 連續語音 tokenizer、LLM 主幹（Qwen2.5）+ diffusion head 的 next-token diffusion 兩段式管線。" />
+  <meta name="description" content="VibeVoice 技術架構：7.5Hz 連續語音 tokenizer、LLM 主幹（Qwen2.5）+ diffusion head 兩段式管線，以及串流版的區塊前瞻與 BitNet 異質量化。" />
   <meta name="theme-color" content="#0a0a0f" />
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -35,13 +35,21 @@
 </head>
 <body data-page="architecture">
   <main id="page">
-<div class="reading-progress" id="readingProgress" aria-hidden="true" style="width: 0%;"></div><header class="page-head"><h1>技術架構</h1><p class="page-head__sub">7.5 Hz tokenizer 加上 next-token diffusion：VibeVoice 如何把 90 分鐘音訊塞進 64K 脈絡。</p></header><div class="article-layout"><nav class="toc" aria-label="Contents"><div class="toc__inner"><a class="toc-link toc-link--active" href="#idea" data-toc="idea">核心構想</a><a class="toc-link" href="#tokenizer" data-toc="tokenizer">連續 7.5 Hz tokenizer</a><a class="toc-link" href="#diffusion" data-toc="diffusion">Next-token diffusion</a><a class="toc-link" href="#tradeoffs" data-toc="tradeoffs">繼承與限制</a></div></nav><div class="article-body prose"><section class="article-section in" id="idea" data-item="" aria-labelledby="idea-h"><h2 id="idea-h">核心構想</h2><p>多數神經語音合成系統以 50–100 Hz 將音訊 token 化，這種精細度代價高昂：90 分鐘語音會變成 135,000 個以上的 token，遠超出實用的脈絡長度。VibeVoice 的關鍵賭注是——可以用更粗的 7.5 Hz 來 token 化，再讓 diffusion 模型把聲學細節「補繪」回來。</p><blockquote>壓縮的是時間軸，不是語意：7.5 Hz 維持對話連貫，由 diffusion head 還原 24 kHz 的聲音細節。</blockquote></section><section class="article-section in" id="tokenizer" data-item="" aria-labelledby="tokenizer-h"><h2 id="tokenizer-h">連續 7.5 Hz tokenizer</h2><p>VibeVoice 採用連續語音 tokenizer——分為聲學（acoustic）與語意（semantic）兩條流——以 7.5 Hz 的影格率運作。正是這個低取樣率，讓長序列處理變得可行，同時保留足夠資訊還原自然語音。</p><h3>為什麼 7.5 Hz 是關鍵</h3><ul><li>比業界常見的 50–100 Hz 粗約 10 倍。</li><li>90 分鐘音訊約 40,500 token——可放進 64K 脈絡。</li><li>token 變少，模型把算力花在對話連貫，而非聲學細節。</li></ul></section><section class="article-section in" id="diffusion" data-item="" aria-labelledby="diffusion-h"><h2 id="diffusion-h">Next-token diffusion</h2><p>生成管線分為兩段。大型語言模型（Qwen2.5 主幹）在 token 層級處理文字脈絡、對話理解與韻律決策；接著由 diffusion head 為每一步還原精細的 24 kHz 聲學細節。</p><pre><code>文字 + 語者參考音
+<div class="reading-progress" id="readingProgress" aria-hidden="true" style="width: 0%;"></div><header class="page-head"><h1>技術架構</h1><p class="page-head__sub">7.5 Hz tokenizer 加上 next-token diffusion：VibeVoice 如何把 90 分鐘音訊塞進 64K 脈絡——以及這套設計後來如何延伸到串流與純 CPU。</p></header><div class="article-layout"><nav class="toc" aria-label="Contents"><div class="toc__inner"><a class="toc-link toc-link--active" href="#idea" data-toc="idea">核心構想</a><a class="toc-link" href="#tokenizer" data-toc="tokenizer">連續 7.5 Hz tokenizer</a><a class="toc-link" href="#diffusion" data-toc="diffusion">Next-token diffusion</a><a class="toc-link" href="#streaming" data-toc="streaming">同一套設計的兩種延伸：串流與邊緣</a><a class="toc-link" href="#tradeoffs" data-toc="tradeoffs">繼承與限制</a></div></nav><div class="article-body prose"><section class="article-section in" id="idea" data-item="" aria-labelledby="idea-h"><h2 id="idea-h">核心構想</h2><p>多數神經語音合成系統以 50–100 Hz 將音訊 token 化，這種精細度代價高昂：90 分鐘語音會變成 135,000 個以上的 token，遠超出實用的脈絡長度。VibeVoice 的關鍵賭注是——可以用更粗的 7.5 Hz 來 token 化，再讓 diffusion 模型把聲學細節「補繪」回來。</p><blockquote>壓縮的是時間軸，不是語意：7.5 Hz 維持對話連貫，由 diffusion head 還原 24 kHz 的聲音細節。</blockquote></section><section class="article-section in" id="tokenizer" data-item="" aria-labelledby="tokenizer-h"><h2 id="tokenizer-h">連續 7.5 Hz tokenizer</h2><p>VibeVoice 採用連續語音 tokenizer——分為聲學（acoustic）與語意（semantic）兩條流——以 7.5 Hz 的影格率運作。正是這個低取樣率，讓長序列處理變得可行，同時保留足夠資訊還原自然語音。</p><h3>為什麼 7.5 Hz 是關鍵</h3><ul><li>比業界常見的 50–100 Hz 粗約 10 倍。</li><li>90 分鐘音訊約 40,500 token——可放進 64K 脈絡。</li><li>token 變少，模型把算力花在對話連貫，而非聲學細節。</li></ul></section><section class="article-section in" id="diffusion" data-item="" aria-labelledby="diffusion-h"><h2 id="diffusion-h">Next-token diffusion</h2><p>生成管線分為兩段。大型語言模型（Qwen2.5 主幹）在 token 層級處理文字脈絡、對話理解與韻律決策；接著由 diffusion head 為每一步還原精細的 24 kHz 聲學細節。</p><pre><code>文字 + 語者參考音
       |
       v
 [ LLM 主幹 (Qwen2.5) ]   -&gt;  7.5 Hz 的語意／韻律 token
       |
       v
-[ diffusion head ]        -&gt;  24 kHz 聲學波形</code></pre><p>這種「分工」正是單一模型能撐起長篇多語者對話的原因：LLM 負責記住「誰在說、接下來說什麼」，diffusion head 則專注於「聽起來如何」。</p></section><section class="article-section in" id="tradeoffs" data-item="" aria-labelledby="tradeoffs-h"><h2 id="tradeoffs-h">繼承與限制</h2><p>由於主幹建立在 Qwen2.5 之上，模型會繼承其基礎行為——包含偶爾出現非預期、帶偏見或不準確的輸出。架構也是為乾淨、依序的對話而調校：它無法處理重疊發話、背景音樂或音效。</p><p>確切數據見「規格與數據」頁；負責任 AI 的指引見「限制與負責任 AI」頁。</p></section></div></div>
+[ diffusion head ]        -&gt;  24 kHz 聲學波形</code></pre><p>這種「分工」正是單一模型能撐起長篇多語者對話的原因：LLM 負責記住「誰在說、接下來說什麼」，diffusion head 則專注於「聽起來如何」。</p></section><section class="article-section in" id="streaming" data-item="" aria-labelledby="streaming-h"><h2 id="streaming-h">同一套設計的兩種延伸：串流與邊緣</h2><p>2026 年的幾次發布沒有換掉架構，而是把它往兩個方向拉伸。兩者的起點是同一個條件：7.5 Hz 的序列夠小，模型才負擔得起隨身攜帶脈絡。</p><h3>串流：區塊、前瞻，與自己剛寫過的稿</h3><p>一次讀完整整一小時，正是離線版能分清楚誰是誰的原因——也正是即時逐字稿做不到的事。VibeVoice-ASR-Streaming 的解法是把三樣東西交錯餵進去：一段固定長度的新音訊、一小段越過邊界的前瞻音訊，以及模型自己已經產出的文字。把自己的逐字稿再餵回去，就是語者身分能跨越區塊邊界的關鍵——所以它依然不需要獨立的語者分離流程。</p><pre><code>chunk_frames = 22  @ 7.5 Hz  -&gt;  每段輸出約 2.9 秒音訊
+lookahead_frames = 4          -&gt;  越過邊界前瞻約 0.5 秒
+
+[ 音訊區塊 | 前瞻 | 已產出的文字 ]
+      |
+      v
+[ LLM ]  -&gt;  「語者 1：…」
+      |
+      +--&gt;  文字回饋到下一個區塊</code></pre><p>數字要老實讀：以上是官方權重實際採用的設定，描述的是「約三秒一段」的節奏，而不是次秒級延遲。它是即時逐字稿，但不是零延遲。</p><h3>邊緣：兩個半邊，用不同的壓法</h3><p>VibeVoice-ASR-BitNet 走的是另一條路——長度不變，但硬體需求大幅下降。它的壓縮刻意不對稱，因為模型的兩個半邊能忍受的程度差很多：VAE 聲學 tokenizer 量化到 INT8，搭配融合過的 SIMD 最佳化 kernel；自迴歸解碼器則一路壓到 BitNet 式的三元權重。漸進式的量化感知訓練讓準確度的代價維持在小幅範圍。</p><ul><li>4.62 GB -&gt; 1.58 GB，整體約縮小 2.9 倍。</li><li>只要三條 CPU 執行緒就能達到實時因子小於 1——不需要 GPU。</li><li>在相近的約 1.6 GB 規模下，比 whisper.cpp 快 1.6–2.3 倍。</li></ul></section><section class="article-section in" id="tradeoffs" data-item="" aria-labelledby="tradeoffs-h"><h2 id="tradeoffs-h">繼承與限制</h2><p>由於主幹建立在 Qwen2.5 之上，模型會繼承其基礎行為——包含偶爾出現非預期、帶偏見或不準確的輸出。架構也是為乾淨、依序的對話而調校：它無法處理重疊發話、背景音樂或音效。</p><p>確切數據見「規格與數據」頁；負責任 AI 的指引見「限制與負責任 AI」頁。</p></section></div></div>
 </main>
   <script src="data/data.js"></script>
   <script src="assets/shell.js"></script>

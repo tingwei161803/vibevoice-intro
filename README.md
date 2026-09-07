@@ -14,6 +14,8 @@
 
 > 直接點進去就能用，無需安裝。每一頁的每一種語言都有獨立網址，方便分享（「模型家族」中文版是 `…/models.html`，英文版是 `…/en/models.html`）。
 
+> 🔄 **改內容的流程**：所有文字都在 `data/data.js`，但每個 `.html` 的 `<main id="page">` 另存了一份渲染後的靜態快照給爬蟲看。改完 `data.js` 後，那 26 份快照必須一起重新產生，否則沒有 JS 的訪客與搜尋引擎讀到的會是舊內容。
+
 ---
 
 ## ✨ 功能特色
@@ -31,14 +33,16 @@
 
 ## 📂 內容結構 / 資料來源
 
-本站內容整理自 **microsoft/VibeVoice 專案說明**，並參考[一篇中文技術介紹文章](https://www.itnotetk.com/2026/05/01/vibevoice-microsoft-multi-speaker-tts/)。
+本站內容整理自 **microsoft/VibeVoice 專案說明**、官方技術報告與模型卡，並參考[一篇中文技術介紹文章](https://www.itnotetk.com/2026/05/01/vibevoice-microsoft-multi-speaker-tts/)。
+
+> 📅 **內容對齊時間**：2026 年 9 月，已涵蓋到 ASR-Streaming（2026-09-03）。
 
 ```
 vibevoice-intro/
 ├── index.html          # 首頁 / 總覽（hub）
-├── models.html         # 模型家族（TTS / ASR / Realtime）
-├── versions.html       # 版本比較（三版本並列矩陣）
-├── architecture.html   # 技術架構（7.5Hz tokenizer + next-token diffusion）
+├── models.html         # 模型家族（TTS / ASR / Realtime / ASR-Streaming / ASR-BitNet）
+├── versions.html       # 版本比較（五版本並列矩陣）
+├── architecture.html   # 技術架構（7.5Hz tokenizer、next-token diffusion、串流與 BitNet 量化）
 ├── specs.html          # 規格與數據（圖表 + 完整規格表）
 ├── compare.html        # 語音合成對比（vs gpt-4o-mini-tts / ElevenLabs / F5-TTS / XTTS-v2 / SparkTTS / CosyVoice 2）
 ├── compare-asr.html    # 語音辨識對比（vs FunASR / Whisper / gpt-4o-transcribe）
