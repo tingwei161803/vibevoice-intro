@@ -663,6 +663,317 @@ window.SITE_PAGES = [
     ]
   },
 
+  /* ===================== 8b. COMMUNITY (ecosystem & safety, gallery) ===================== */
+  {
+    slug: "community", layout: "gallery", icon: "extension",
+    title: { en: "Community builds & safety", zh: "社群生態與安全" },
+    subtitle: {
+      en: "People have wrapped VibeVoice into ComfyUI nodes, desktop apps, API servers and native ports. Here is what exists — and what to check before you run any of it. Signals captured September 2026; tap a card for the detail and the repo link.",
+      zh: "社群把 VibeVoice 包成了 ComfyUI 節點、桌面應用、API 伺服器與原生移植。這裡整理有哪些，以及在你執行它們之前該確認什麼。數據擷取於 2026 年 9 月；點卡片看細節與 repo 連結。"
+    },
+    categories: [
+      { key: "guide",   en: "Read first",   zh: "先讀這個" },
+      { key: "source",  en: "Source rescue", zh: "原始碼保存" },
+      { key: "comfyui", en: "ComfyUI",      zh: "ComfyUI 節點" },
+      { key: "app",     en: "Apps & WebUI", zh: "應用 / WebUI" },
+      { key: "server",  en: "API servers",  zh: "API 伺服器" },
+      { key: "port",    en: "Native ports", zh: "原生移植" }
+    ],
+    items: [
+      /* ---------- the safety frame ---------- */
+      {
+        slug: "how-to-read", category: "guide",
+        title: { en: "How to read this page", zh: "這頁該怎麼讀" },
+        summary: {
+          en: "These are observable signals, not an audit. Nothing here is an endorsement.",
+          zh: "這裡列的是可查證的訊號，不是稽核結果。任何一項都不構成背書。"
+        },
+        tags: [{ en: "Method", zh: "方法" }, { en: "Sep 2026", zh: "2026 / 09" }],
+        overview: {
+          en: "What was checked for every project below: the licence, when it was last pushed, how many people use it, where its README tells the software to fetch model weights from, and whether those weights are safetensors or a pickle format. What was NOT checked: nobody read the source code, ran the software, or verified that any weight file is really what it claims to be. A popular, recently-updated, MIT-licensed repo can still ship something harmful — popularity is a weak signal, not a guarantee. Treat every entry as a starting point for your own review, and weigh it against what you would lose if the machine running it were compromised.",
+          zh: "以下每個專案都查了這些：授權條款、最後推送時間、使用規模、README 指示軟體去哪裡抓模型權重，以及那些權重是 safetensors 還是 pickle 類格式。沒有查的是：沒有人讀過原始碼、沒有實際執行過，也沒有驗證任何權重檔真的是它宣稱的東西。一個熱門、近期更新、掛著 MIT 的 repo，仍然可能夾帶有害的東西——熱門度是弱訊號，不是保證。請把每一則都當成你自己審查的起點，並衡量萬一執行它的那台機器被入侵，你會損失什麼。"
+        }
+      },
+      {
+        slug: "risk-installers", category: "guide",
+        title: { en: "The real risk is the installer, not the model", zh: "真正的風險在安裝腳本，不在模型" },
+        summary: {
+          en: "A ComfyUI custom node is arbitrary Python running with your user's permissions. That vector has been abused for real.",
+          zh: "ComfyUI 自訂節點就是以你的權限執行的任意 Python。這個管道已經被真實濫用過。"
+        },
+        tags: [{ en: "Arbitrary code", zh: "任意程式碼" }, "ComfyUI", { en: "High risk", zh: "高風險" }],
+        overview: {
+          en: "It is tempting to worry about the AI model and relax about the wrapper. That is backwards. Model weights in safetensors format cannot execute code when loaded; a custom node's install script can do anything your user account can. The ComfyUI ecosystem has seen this abused repeatedly: the ComfyUI_LLMVISION node harvested browser passwords and credit-card details, an 'Upscaler_4K' node in the official registry delivered the Akira infostealer, and in 2026 over a thousand internet-exposed ComfyUI instances were enrolled into a cryptomining botnet through nodes that accept and run Python. None of that is specific to VibeVoice — it is the cost of the plugin model. Practical mitigations: install from the author's own repo rather than a re-upload, read requirements.txt and any install.py before running, prefer a container or a machine you can wipe, and never expose ComfyUI to the internet without authentication.",
+          zh: "人們很容易擔心 AI 模型本身，卻對外面那層包裝鬆懈。這是反過來的。safetensors 格式的權重在載入時無法執行程式碼；而自訂節點的安裝腳本，能做你的使用者帳號能做的任何事。ComfyUI 生態已經反覆被利用：ComfyUI_LLMVISION 節點竊取瀏覽器密碼與信用卡資料；官方 registry 上一個名為 Upscaler_4K 的節點散布 Akira 資訊竊取程式；2026 年更有超過一千台暴露在網際網路上的 ComfyUI 實例，透過會接收並執行 Python 的節點被納入挖礦殭屍網路。這些都不是 VibeVoice 特有的問題——這是外掛模式本身的代價。實務上的緩解：從作者本人的 repo 安裝而非別人的轉傳、執行前先讀過 requirements.txt 與任何 install.py、優先用容器或一台你隨時能重灌的機器，以及絕對不要把沒有驗證的 ComfyUI 對外開放。"
+        }
+      },
+      {
+        slug: "risk-7b-weights", category: "guide",
+        title: { en: "Your \"7B / Large\" weights are not Microsoft's", zh: "你用的「7B / Large」不是微軟發布的" },
+        summary: {
+          en: "Microsoft never published a 7B TTS checkpoint. Every popular wrapper pulls it from a third-party re-upload.",
+          zh: "微軟從未發布 7B 的 TTS 權重。所有熱門包裝都是去第三方轉傳處抓的。"
+        },
+        tags: [{ en: "Provenance", zh: "來源" }, "7B", { en: "Unverified", zh: "無法驗證" }],
+        overview: {
+          en: "Microsoft's Hugging Face org publishes exactly these VibeVoice checkpoints: TTS-1.5B, Realtime-0.5B, the ASR family (ASR, ASR-HF, ASR-BitNet, ASR-Streaming 1.5B and 7B) and the acoustic tokenizer. There is no microsoft/VibeVoice-7B for text-to-speech — the larger TTS model appears in the paper's benchmarks but was never left up for download. Yet the wrappers that offer you a 'Large' or '7B' voice all fetch it from somewhere else: vibevoice/VibeVoice-7B (~36k downloads), aoi-ot/VibeVoice-Large, FabioSarracino/VibeVoice-Large-Q8, zhaokun/vibevoice-large. The reassuring part: every one of those mirrors ships safetensors with no pickle files, so loading them cannot execute code. The unresolved part: nobody outside those uploaders can confirm the weights are unmodified Microsoft originals, and a fine-tuned or tampered model would look identical from the outside. If provenance matters to your use case, stay on the 1.5B checkpoint that Microsoft actually hosts.",
+          zh: "微軟的 Hugging Face 帳號上，VibeVoice 系列的權重就是這些：TTS-1.5B、Realtime-0.5B、ASR 家族（ASR、ASR-HF、ASR-BitNet、ASR-Streaming 的 1.5B 與 7B）與聲學 tokenizer。**沒有** 給語音合成用的 microsoft/VibeVoice-7B——較大的 TTS 模型出現在論文的評測裡，但從未留在網路上供人下載。然而所有提供「Large」或「7B」音色的包裝，都是去別處抓的：vibevoice/VibeVoice-7B（約 3.6 萬次下載）、aoi-ot/VibeVoice-Large、FabioSarracino/VibeVoice-Large-Q8、zhaokun/vibevoice-large。可以放心的部分：這些鏡像全都是 safetensors、沒有任何 pickle 檔，載入時無法執行程式碼。無解的部分：除了上傳者本人，沒有人能確認那些權重是未經修改的微軟原版，而一個被微調過或動過手腳的模型，從外面看起來一模一樣。如果來源可信度對你的用途很重要，就留在微軟真的有在託管的 1.5B。"
+        }
+      },
+      {
+        slug: "risk-disclosure", category: "guide",
+        title: { en: "Watermarking, disclosure, and the licence", zh: "浮水印、揭露，以及授權" },
+        summary: {
+          en: "MIT lets anyone fork it — including past the safeguards. Your obligations do not fork away with it.",
+          zh: "MIT 讓任何人都能 fork——包括繞過防護。但你的義務不會跟著 fork 消失。"
+        },
+        tags: [{ en: "Responsible AI", zh: "負責任 AI" }, "MIT", { en: "Disclosure", zh: "揭露" }],
+        overview: {
+          en: "Microsoft pulled the TTS code in September 2025 after finding uses inconsistent with its stated intent. Because everything was released under MIT, the community forks that preserve it are entirely legal and cannot be taken down — the licence is why the model survived, and also why the removal changed very little in practice. What that does not do is transfer the responsibility elsewhere. The official model embeds imperceptible watermarking to mark audio as AI-generated and the documentation asks for an audible disclaimer too; a fork is free to strip either, and you have no way to tell from the outside whether a given build still does it. So verify it yourself if it matters, disclose AI-generated audio regardless, and remember the upstream guidance still stands: this is research code, not something the maintainers recommend deploying commercially without further safety and quality testing.",
+          zh: "微軟在 2025 年 9 月發現有違背原始用途的使用方式後撤下 TTS 程式碼。由於所有東西都以 MIT 釋出，社群保存它的那些 fork 完全合法、也無從下架——授權正是這個模型得以存活的原因，也是撤下在實務上幾乎沒改變什麼的原因。但這並不代表責任跟著轉移出去。官方模型內建了不可察覺的浮水印來標記 AI 生成，文件也建議加上可聽見的聲明；fork 想拿掉哪一項都可以，而你從外面無法判斷某個版本是否還保留著。所以真的在意就自己驗證，無論如何都要揭露音訊為 AI 生成，並記得上游的定位始終沒變：這是研究用程式碼，維護者並不建議未經進一步的安全與品質測試就投入商業部署。"
+        }
+      },
+      {
+        slug: "vibevoice-community", category: "source",
+        title: { en: "vibevoice-community/VibeVoice", zh: "vibevoice-community/VibeVoice" },
+        summary: {
+          en: "The fork that kept the pulled TTS code alive — 1.6k stars, 739 forks, still maintained.",
+          zh: "把被下架的 TTS 程式碼接住的 fork——1.6k star、739 fork，仍在維護。"
+        },
+        tags: ["★ 1.6k", "MIT", "2026 / 08", { en: "de-facto upstream", zh: "事實上的上游" }],
+        overview: {
+          en: "When Microsoft removed the TTS code in September 2025, this fork picked it up within days and became the reference the rest of the ecosystem builds against. It is MIT, actively pushed to as of August 2026, and carries the largest fork count in the ecosystem. It also adds unofficial training and fine-tuning code that never existed upstream. Its README points at Microsoft's own 1.5B and Realtime-0.5B checkpoints, but also at community 7B re-uploads — see the provenance card above before pulling those. Being the most-used fork makes it the most-reviewed one, which helps; it does not make it audited.",
+          zh: "微軟在 2025 年 9 月移除 TTS 程式碼後，這個 fork 在幾天內接手，成為整個生態其他專案對照的基準。採 MIT 授權，2026 年 8 月仍有推送，fork 數是生態中最高的。它另外補上了上游從未有過的非官方訓練與微調程式碼。README 指向微軟自家的 1.5B 與 Realtime-0.5B，但同時也指向社群轉傳的 7B——抓那些之前請先看上面那張來源卡。身為最多人用的 fork，代表被看過的眼睛也最多，這是加分；但那不等於它被稽核過。"
+        },
+        url: "https://github.com/vibevoice-community/VibeVoice"
+      },
+      {
+        slug: "shijincai-archive", category: "source",
+        title: { en: "shijincai/VibeVoice", zh: "shijincai/VibeVoice" },
+        summary: {
+          en: "A same-day snapshot of the official repo taken when Microsoft pulled it. Frozen since.",
+          zh: "微軟下架當天做的官方 repo 快照。此後就凍結了。"
+        },
+        tags: ["★ 45", "MIT", "2025 / 09", { en: "frozen", zh: "已凍結" }],
+        overview: {
+          en: "Created on 5 September 2025 — the exact day the official code came down — as a straight archive of the repository. It has not been touched since, which is the point: it is a historical snapshot rather than a maintained project. Useful if you want to see what the original looked like before the community fork started diverging. Its README points at Microsoft's official Hugging Face collection for weights rather than a re-upload. For anything you actually intend to run, prefer the maintained community fork; a year-old frozen copy will not carry security fixes.",
+          zh: "建立於 2025 年 9 月 5 日——正是官方程式碼下架的那一天——單純作為 repo 的存檔。此後未再更動，而這正是它的用意：它是歷史快照，而非持續維護的專案。如果你想看看社群 fork 開始分歧之前，原版長什麼樣子，它有價值。README 指向微軟官方的 Hugging Face 收藏而非轉傳。但凡你真的要拿來執行，請選有在維護的社群 fork；一份凍結一年的副本不會帶有任何安全修正。"
+        },
+        url: "https://github.com/shijincai/VibeVoice"
+      },
+      {
+        slug: "enemyx-comfyui", category: "comfyui",
+        title: { en: "Enemyx-net/VibeVoice-ComfyUI", zh: "Enemyx-net/VibeVoice-ComfyUI" },
+        summary: {
+          en: "The most-starred ComfyUI integration — but last pushed February 2026.",
+          zh: "star 數最高的 ComfyUI 整合——但最後推送停在 2026 年 2 月。"
+        },
+        tags: ["★ 1.5k", "MIT", "2026 / 02", { en: "3rd-party weights", zh: "非官方權重" }],
+        overview: {
+          en: "The most popular way to drive VibeVoice from a ComfyUI workflow: single and multi-speaker nodes, voice cloning from a reference clip, and model downloads handled for you. Two things to weigh. First, it has not been pushed to since February 2026, so roughly seven months of upstream changes — including everything Microsoft shipped in 2026 — are not reflected, and 36 issues are open. Second, its default model list reaches for third-party 7B re-uploads (aoi-ot/VibeVoice-Large, FabioSarracino/VibeVoice-Large-Q8, DevParker/VibeVoice7b-low-vram) alongside Microsoft's official 1.5B. Automatic download is convenient and also means weights arrive without you choosing the source — decide that deliberately.",
+          zh: "從 ComfyUI 工作流驅動 VibeVoice 最熱門的方式：單人與多人語者節點、用參考音複製聲音，並自動處理模型下載。有兩件事要權衡。第一，它自 2026 年 2 月後就沒有推送，等於約七個月的上游變動——包含微軟 2026 年發布的所有東西——都沒有反映進來，且有 36 個 issue 未關。第二，它預設的模型清單除了微軟官方的 1.5B，也伸手去抓第三方轉傳的 7B（aoi-ot/VibeVoice-Large、FabioSarracino/VibeVoice-Large-Q8、DevParker/VibeVoice7b-low-vram）。自動下載很方便，但也代表權重是在你沒有選擇來源的情況下進來的——這件事請有意識地決定。"
+        },
+        url: "https://github.com/Enemyx-net/VibeVoice-ComfyUI"
+      },
+      {
+        slug: "wildminder-comfyui", category: "comfyui",
+        title: { en: "wildminder/ComfyUI-VibeVoice", zh: "wildminder/ComfyUI-VibeVoice" },
+        summary: {
+          en: "The other well-known ComfyUI node — but untouched for about a year.",
+          zh: "另一個知名的 ComfyUI 節點——但已經約一年沒有動過。"
+        },
+        tags: ["★ 597", "MIT", "2025 / 09", { en: "stale", zh: "已停滯" }],
+        overview: {
+          en: "An early and widely-recommended ComfyUI node, and still the one many tutorials point at. The problem is the date: its last push was September 2025, right around the time Microsoft pulled the code, so it predates the entire 2026 model line — no ASR, no streaming, no BitNet — and 26 issues sit open. It also defaults to the aoi-ot/VibeVoice-Large re-upload for the big model. If a guide sends you here, check whether a maintained alternative covers your case first; an abandoned node is not automatically dangerous, but nobody is watching it for you.",
+          zh: "很早期、也被廣泛推薦的 ComfyUI 節點，至今仍是許多教學指向的對象。問題出在日期：最後推送是 2025 年 9 月，正好是微軟撤下程式碼的前後，因此它早於 2026 年整條模型線——沒有 ASR、沒有串流、沒有 BitNet——且有 26 個 issue 未關。大模型同樣預設抓 aoi-ot/VibeVoice-Large 轉傳。如果某篇教學把你導來這裡，先確認有沒有仍在維護的替代方案能滿足你的需求；停止維護的節點不必然危險，但已經沒有人在替你盯著它了。"
+        },
+        url: "https://github.com/wildminder/ComfyUI-VibeVoice"
+      },
+      {
+        slug: "tts-audio-suite", category: "comfyui",
+        title: { en: "diodiogod/TTS-Audio-Suite", zh: "diodiogod/TTS-Audio-Suite" },
+        summary: {
+          en: "Multi-engine ComfyUI suite where VibeVoice is one of several TTS backends. Actively maintained.",
+          zh: "多引擎的 ComfyUI 套件，VibeVoice 只是其中一個 TTS 後端。維護活躍。"
+        },
+        tags: ["★ 1.2k", "MIT", "2026 / 09", { en: "actively maintained", zh: "維護活躍" }],
+        overview: {
+          en: "Rather than wrapping VibeVoice alone, this bundles several TTS and voice-conversion engines behind one set of ComfyUI nodes, which makes it easy to A/B VibeVoice against other models in the same workflow. It is the most actively maintained ComfyUI option here — pushed to in September 2026 — with 58 open issues, which is what an actively-used project of this size looks like. GitHub reports the licence as 'NOASSERTION' because it could not auto-detect it, but the LICENSE file is a standard MIT licence. Breadth cuts both ways: more engines means more third-party dependencies pulled into your ComfyUI install.",
+          zh: "它不只包 VibeVoice，而是把多個 TTS 與變聲引擎收在同一組 ComfyUI 節點後面，因此可以在同一條工作流裡直接把 VibeVoice 跟其他模型互相對照。這是本頁 ComfyUI 選項中維護最活躍的一個——2026 年 9 月仍有推送——有 58 個 issue 未關，這對一個這種規模、且真的有人在用的專案來說算正常。GitHub 把授權標成 NOASSERTION 是因為自動偵測失敗，實際的 LICENSE 檔就是標準 MIT。廣度是雙面刃：引擎越多，被拉進你 ComfyUI 環境的第三方依賴也越多。"
+        },
+        url: "https://github.com/diodiogod/TTS-Audio-Suite"
+      },
+      {
+        slug: "voice-clone-studio", category: "app",
+        title: { en: "FranckyB/Voice-Clone-Studio", zh: "FranckyB/Voice-Clone-Studio" },
+        summary: {
+          en: "Gradio web UI for voice cloning, pairing VibeVoice with Qwen3-TTS and Whisper.",
+          zh: "Gradio 網頁介面的聲音複製工具，把 VibeVoice 與 Qwen3-TTS、Whisper 搭在一起。"
+        },
+        tags: ["★ 667", "Apache-2.0", "2026 / 05", { en: "web UI", zh: "網頁介面" }],
+        overview: {
+          en: "A browser UI aimed at voice cloning and voice design rather than at long-form podcast generation. It combines engines: Qwen3-TTS and VibeVoice for synthesis, and either Whisper or VibeVoice-ASR for automatic transcription — so it is one of the few community apps that actually uses the recognition side of the family. Apache-2.0 rather than MIT, and only one open issue against 667 stars. Last push was May 2026, so it predates the ASR-BitNet and streaming releases. As with any Gradio app, do not put it on a public address without putting authentication in front of it.",
+          zh: "以聲音複製與音色設計為目標的瀏覽器介面，而非長篇 Podcast 生成。它混用多個引擎：合成用 Qwen3-TTS 與 VibeVoice，自動轉寫則可選 Whisper 或 VibeVoice-ASR——因此它是少數真的有用到這個家族「辨識」那一側的社群應用。授權是 Apache-2.0 而非 MIT，667 star 之下只有 1 個 issue 未關。最後推送在 2026 年 5 月，因此早於 ASR-BitNet 與串流版。跟任何 Gradio 應用一樣：沒有在前面擋一層驗證之前，不要把它放到公開位址上。"
+        },
+        url: "https://github.com/FranckyB/Voice-Clone-Studio"
+      },
+      {
+        slug: "tts-audiobook-tool", category: "app",
+        title: { en: "zeropointnine/tts-audiobook-tool", zh: "zeropointnine/tts-audiobook-tool" },
+        summary: {
+          en: "Audiobook pipeline across many TTS models, with a synced reader app. Actively maintained.",
+          zh: "跨多個 TTS 模型的有聲書製作流程，附同步閱讀器。維護活躍。"
+        },
+        tags: ["★ 203", "MIT", "2026 / 09", { en: "audiobooks", zh: "有聲書" }],
+        overview: {
+          en: "Built around the job rather than the model: it takes a book and produces high-quality long-form audio, with VibeVoice as one supported engine among several (Qwen3-TTS, OmniVoice and others). It also ships an audio-synced reader web app and a standalone server component, which is more finished than most projects in this list. Pushed to in September 2026 with only two open issues. If your actual goal is 'turn this text into a listenable audiobook' rather than 'run VibeVoice', this is a more direct route than assembling a ComfyUI graph.",
+          zh: "它是繞著「任務」而非「模型」設計的：輸入一本書，產出高品質的長篇音訊，VibeVoice 只是它支援的引擎之一（另有 Qwen3-TTS、OmniVoice 等）。它還附帶一個音訊同步的閱讀器網頁應用與獨立的伺服器元件，完成度比清單上多數專案高。2026 年 9 月仍有推送，只有 2 個 issue 未關。如果你真正的目標是「把這段文字變成能聽的有聲書」而不是「執行 VibeVoice」，這條路比自己拼一張 ComfyUI 流程圖直接得多。"
+        },
+        url: "https://github.com/zeropointnine/tts-audiobook-tool"
+      },
+      {
+        slug: "voice-studio", category: "app",
+        title: { en: "msrbuilds/voice-studio", zh: "msrbuilds/voice-studio" },
+        summary: {
+          en: "A local multi-model TTS studio positioned as an open alternative to ElevenLabs.",
+          zh: "本地端的多模型 TTS 工作室，定位是 ElevenLabs 的開源替代。"
+        },
+        tags: ["★ 185", "MIT", "2026 / 07", { en: "local studio", zh: "本地工作室" }],
+        overview: {
+          en: "A desktop-oriented studio that runs several TTS models locally, with VibeVoice among them, aimed squarely at people who want to stop paying a per-character subscription. MIT, pushed to in July 2026, one open issue. It is younger than most entries here — created in June 2026 — so there is less community history to judge it by, and a smaller project means fewer people would notice if a dependency turned malicious. Read the requirements before installing, as with anything in this category.",
+          zh: "偏桌面型的工作室，在本地執行數個 TTS 模型、VibeVoice 是其中之一，明確針對不想再付每字計費訂閱的人。MIT 授權，2026 年 7 月有推送，1 個 issue 未關。它比本頁多數專案年輕——2026 年 6 月才建立——因此可供判斷的社群歷史較少；而專案規模小也意味著萬一某個依賴出問題，會注意到的人比較少。跟這個分類的所有東西一樣：安裝前先讀過依賴清單。"
+        },
+        url: "https://github.com/msrbuilds/voice-studio"
+      },
+      {
+        slug: "audiobook-maker", category: "app",
+        title: { en: "DigiJoe79/AudioBook-Maker", zh: "DigiJoe79/AudioBook-Maker" },
+        summary: {
+          en: "A real desktop app (Tauri 2.0) for audiobooks — drag-and-drop, 17+ languages, MP3/M4A export.",
+          zh: "真正的桌面應用（Tauri 2.0），做有聲書用——拖放編排、17+ 種語言、可輸出 MP3/M4A。"
+        },
+        tags: ["★ 90", "MIT", "2026 / 01", { en: "desktop app", zh: "桌面應用" }],
+        overview: {
+          en: "The closest thing here to a packaged application rather than a repo you run from a terminal: built with Tauri 2.0, with drag-and-drop chapter organisation, NLP-based text segmentation and export to MP3, M4A or WAV. VibeVoice is one of three engines alongside XTTS and Chatterbox. Caveats: last push was January 2026 with 8 issues open, and it is a small project, so treat any prebuilt binary with the same care you would give any unsigned executable from an individual developer — building from source is the more conservative route.",
+          zh: "本頁最接近「打包好的應用程式」而非「在終端機執行的 repo」的一個：以 Tauri 2.0 開發，可拖放編排章節、用 NLP 做文字切分，並輸出 MP3、M4A 或 WAV。VibeVoice 是它三個引擎之一，另有 XTTS 與 Chatterbox。要注意的是：最後推送在 2026 年 1 月、8 個 issue 未關，而且是小型專案，因此對任何預先編譯的執行檔，請用你對待「個人開發者提供的未簽章執行檔」同樣的謹慎——從原始碼自行建置是比較保守的做法。"
+        },
+        url: "https://github.com/DigiJoe79/AudioBook-Maker"
+      },
+      {
+        slug: "vibevoice-fusion", category: "app",
+        title: { en: "zhao-kun/VibeVoiceFusion", zh: "zhao-kun/VibeVoiceFusion" },
+        summary: {
+          en: "Full-stack multi-speaker web system — but it ships with no licence at all.",
+          zh: "全端多語者網頁系統——但它完全沒有附授權。"
+        },
+        tags: ["★ 491", "NO LICENSE", "2026 / 02", { en: "licence risk", zh: "授權疑慮" }],
+        overview: {
+          en: "Popular enough at 491 stars to keep appearing in search results, and a genuinely full-stack take on multi-speaker generation. The reason it is listed with a warning: the repository carries no licence file. Under default copyright that means all rights reserved — you have no granted permission to use, modify or redistribute it, regardless of the fact that it is public on GitHub. That is a legal exposure, not a malware one, but it is the kind that surfaces later rather than sooner. It also points at its own weight re-upload (zhaokun/vibevoice-large). Last push February 2026. Worth watching in case a licence is added; hard to recommend for anything beyond personal experimentation until then.",
+          zh: "491 star，熱門到會持續出現在搜尋結果裡，而且確實是個完整的全端多語者生成方案。之所以在這裡帶著警語列出，是因為：這個 repo 沒有附任何授權檔。在著作權的預設狀態下，這代表保留一切權利——不論它在 GitHub 上是公開的，你都沒有被授予使用、修改或再散布的權限。這是法律面的曝險而非惡意程式的問題，但屬於那種比較晚才會浮上檯面的類型。它同時指向自己上傳的權重（zhaokun/vibevoice-large）。最後推送在 2026 年 2 月。可以持續觀察它是否補上授權；在那之前，除了個人實驗以外都很難推薦。"
+        },
+        url: "https://github.com/zhao-kun/VibeVoiceFusion"
+      },
+      {
+        slug: "asr-portable-win", category: "app",
+        title: { en: "timoncool/VibeVoice_ASR_portable_ru", zh: "timoncool/VibeVoice_ASR_portable_ru" },
+        summary: {
+          en: "One-click portable ASR for Windows — fully offline, NVIDIA GPU. Freshly updated.",
+          zh: "Windows 一鍵免安裝的 ASR——完全離線、需 NVIDIA GPU。近期仍在更新。"
+        },
+        tags: ["★ 40", "MIT", "2026 / 09", { en: "one-click", zh: "一鍵安裝" }],
+        overview: {
+          en: "The most literal answer to 'has anyone made this easy to deploy': a portable Windows build of VibeVoice-ASR with a one-click installer that runs entirely offline once set up. Pushed to in September 2026, so it tracks the current ASR line. Two things to note. It is a small project (40 stars) and the documentation is Russian-first, so read carefully if that is not a language you work in. And portable one-click bundles are exactly the format where you are trusting a packager rather than reading code — the convenience is real, and so is the fact that you are running someone else's prebuilt binary. Requires an NVIDIA GPU.",
+          zh: "對於「有沒有人把這東西弄得很好部署」，這是最字面的答案：VibeVoice-ASR 的 Windows 免安裝版，一鍵安裝、裝好後完全離線運作。2026 年 9 月仍有推送，因此跟得上目前的 ASR 線。有兩點要注意。它是小型專案（40 star），且文件以俄文為主，如果那不是你的工作語言請仔細確認。另外，免安裝一鍵包正是那種「你信任的是打包者而不是你讀過的程式碼」的形式——便利是真的，你在執行別人預先編譯好的執行檔這件事也是真的。需要 NVIDIA GPU。"
+        },
+        url: "https://github.com/timoncool/VibeVoice_ASR_portable_ru"
+      },
+      {
+        slug: "realtime-openai-api", category: "server",
+        title: { en: "marhensa/vibevoice-realtime-openai-api", zh: "marhensa/vibevoice-realtime-openai-api" },
+        summary: {
+          en: "Drop-in OpenAI-compatible TTS endpoint backed by Realtime-0.5B. Docker included.",
+          zh: "OpenAI API 相容的 TTS 端點，後面接 Realtime-0.5B。附 Docker。"
+        },
+        tags: ["★ 88", "MIT", "2025 / 12", { en: "OpenAI-compatible", zh: "OpenAI 相容" }],
+        overview: {
+          en: "The pragmatic integration path: it exposes VibeVoice-Realtime-0.5B behind an OpenAI-compatible speech API, with voice names aliased to OpenAI's, so existing code that calls OpenAI TTS can be pointed at a local server by changing a base URL. Ships both a Docker path and a plain Python venv, and is CUDA-optimised. Last push December 2025 — it works against the Realtime model it targets, but has not tracked anything since. Running it in Docker is the better default here, since a container bounds what a service listening on a port can reach.",
+          zh: "最務實的整合路徑：把 VibeVoice-Realtime-0.5B 包在 OpenAI 相容的語音 API 後面，音色名稱也對應到 OpenAI 的命名，因此原本呼叫 OpenAI TTS 的程式碼只要改一個 base URL 就能指向本地伺服器。同時提供 Docker 與純 Python venv 兩條路，並針對 CUDA 最佳化。最後推送在 2025 年 12 月——對它鎖定的 Realtime 模型是可用的，但此後沒有跟進任何更新。這裡建議預設用 Docker 跑，因為容器能限制住一個對外監聽的服務所能觸及的範圍。"
+        },
+        url: "https://github.com/marhensa/vibevoice-realtime-openai-api"
+      },
+      {
+        slug: "vibevoice-fastapi", category: "server",
+        title: { en: "ncoder-ai/VibeVoice-FastAPI", zh: "ncoder-ai/VibeVoice-FastAPI" },
+        summary: {
+          en: "A thin FastAPI wrapper over the 1.5B and 7B models. Small but current.",
+          zh: "包在 1.5B 與 7B 模型外面的輕量 FastAPI。規模小但還算跟得上。"
+        },
+        tags: ["★ 33", "MIT", "2026 / 06", { en: "self-host API", zh: "自架 API" }],
+        overview: {
+          en: "A minimal HTTP service around the original TTS models, for when you want an endpoint rather than a UI. At 33 stars this is a small project with correspondingly few eyes on it, but a thin wrapper is also the easiest kind of code to read end to end before you run it — which is the recommendation here. Last push June 2026. Whatever you use, an inference server should sit behind authentication and not be published directly to the internet; the 2026 ComfyUI botnet campaign found its victims precisely by scanning for exposed AI services.",
+          zh: "包在原始 TTS 模型外面的極簡 HTTP 服務，適合你要的是一個端點而不是一套介面的情況。33 star 代表這是個小專案、盯著它的眼睛相應也少；但輕量包裝同時也是最容易在執行前從頭到尾讀完的那種程式碼——這也是這裡的建議做法。最後推送在 2026 年 6 月。無論你用哪一個，推論伺服器都應該擋在驗證後面、不要直接發布到網際網路上；2026 年那波 ComfyUI 殭屍網路，正是靠掃描暴露在外的 AI 服務找到受害者的。"
+        },
+        url: "https://github.com/ncoder-ai/VibeVoice-FastAPI"
+      },
+      {
+        slug: "vibevoice-cpp", category: "port",
+        title: { en: "localai-org/vibevoice.cpp", zh: "localai-org/vibevoice.cpp" },
+        summary: {
+          en: "C++ port on ggml — no Python environment at all. The most-downloaded weights in this list.",
+          zh: "建在 ggml 上的 C++ 移植——完全不需要 Python 環境。本頁下載量最高的權重。"
+        },
+        tags: ["★ 123", "MIT", "2026 / 07", { en: "no Python", zh: "免 Python" }],
+        overview: {
+          en: "A ggml-based C++ implementation from the LocalAI org, in the same spirit as whisper.cpp and llama.cpp. The practical appeal is that it removes the Python dependency tree entirely — which, given that most of the risk in this ecosystem lives in pip installs and node install scripts, is a meaningful reduction in attack surface rather than just a performance choice. Its companion weight repo mudler/vibevoice.cpp-models has by far the most downloads of any source referenced on this page. MIT, last push July 2026. Note this is a separate effort from Microsoft's own ASR-BitNet CPU engine, VibeASR.cpp.",
+          zh: "來自 LocalAI 組織、建在 ggml 上的 C++ 實作，精神與 whisper.cpp、llama.cpp 一脈相承。它實務上的吸引力在於完全拿掉了 Python 依賴樹——考慮到這個生態的風險大多住在 pip 安裝與節點安裝腳本裡，這是實質縮小攻擊面，而不只是效能上的選擇。它搭配的權重 repo mudler/vibevoice.cpp-models，下載量遠高於本頁提到的任何其他來源。MIT 授權，最後推送 2026 年 7 月。請注意這與微軟自家的 ASR-BitNet CPU 引擎 VibeASR.cpp 是兩個不同的專案。"
+        },
+        url: "https://github.com/localai-org/vibevoice.cpp"
+      },
+      {
+        slug: "vibevoice-rs", category: "port",
+        title: { en: "danielclough/vibevoice-rs", zh: "danielclough/vibevoice-rs" },
+        summary: {
+          en: "Rust implementation with voice cloning and multi-speaker support.",
+          zh: "Rust 實作，支援聲音複製與多語者。"
+        },
+        tags: ["★ 67", "MIT", "2026 / 01", { en: "Rust", zh: "Rust" }],
+        overview: {
+          en: "A Rust port covering voice cloning and multi-speaker generation, for people who would rather ship a single compiled binary than manage a Python environment. Zero open issues and 67 stars — a quiet, small project. Last push January 2026, so it predates the 2026 model line. Like the C++ port, the main structural advantage is that a compiled binary with a Cargo dependency tree is easier to reason about than a pip environment that pulls packages at install time.",
+          zh: "涵蓋聲音複製與多語者生成的 Rust 移植，適合寧願交付單一編譯執行檔、也不想管 Python 環境的人。0 個 issue 未關、67 star——安靜的小專案。最後推送在 2026 年 1 月，因此早於 2026 年那條模型線。跟 C++ 移植一樣，它結構上的主要優勢在於：一個帶著 Cargo 依賴樹的編譯執行檔，比一個安裝當下才去拉套件的 pip 環境更容易推敲。"
+        },
+        url: "https://github.com/danielclough/vibevoice-rs"
+      },
+      {
+        slug: "vibevoice-swift", category: "port",
+        title: { en: "mzbac/vibevoice.swift", zh: "mzbac/vibevoice.swift" },
+        summary: {
+          en: "Swift port of Realtime-0.5B, for Apple platforms.",
+          zh: "Realtime-0.5B 的 Swift 移植，給 Apple 平台用。"
+        },
+        tags: ["★ 31", "MIT", "2025 / 12", { en: "Apple", zh: "Apple" }],
+        overview: {
+          en: "A Swift implementation targeting the real-time 0.5B model — the natural building block if you want on-device streaming speech inside a macOS or iOS app rather than a server call. It is small (31 stars) and has not been pushed since December 2025, so treat it as a reference implementation to learn from rather than a maintained dependency to build a product on.",
+          zh: "針對即時 0.5B 模型的 Swift 實作——如果你想在 macOS 或 iOS 應用裡做裝置端的串流語音，而不是打一支伺服器 API，這是很自然的起點。它規模小（31 star），且自 2025 年 12 月後未再推送，因此請把它當成可以參考學習的實作，而不是拿來承載產品的長期依賴。"
+        },
+        url: "https://github.com/mzbac/vibevoice.swift"
+      },
+      {
+        slug: "mlx-speech", category: "port",
+        title: { en: "appautomaton/mlx-speech", zh: "appautomaton/mlx-speech" },
+        summary: {
+          en: "Pure-MLX speech stack for Apple Silicon — TTS, cloning, dialogue and ASR. Updated this month.",
+          zh: "純 MLX 的 Apple Silicon 語音套件——合成、複製、對話與辨識。本月仍在更新。"
+        },
+        tags: ["★ 47", "MIT", "2026 / 09", { en: "Apple Silicon", zh: "Apple Silicon" }],
+        overview: {
+          en: "Runs VibeVoice natively on Apple Silicon through MLX, alongside several other speech models (Fish S2 Pro, LongCat, MOSS, Step-Audio and a Cohere ASR), covering synthesis, voice cloning, dialogue and recognition. Pushed to in September 2026, making it one of the freshest projects here. Still small at 47 stars, so the usual caveat applies — but if you are on a Mac and want the GPU actually used rather than falling back to CPU, this is the path that does not involve CUDA at all.",
+          zh: "透過 MLX 在 Apple Silicon 上原生執行 VibeVoice，同時涵蓋其他數個語音模型（Fish S2 Pro、LongCat、MOSS、Step-Audio 與 Cohere 的 ASR），功能包含合成、聲音複製、對話與辨識。2026 年 9 月仍有推送，是本頁最新的專案之一。47 star 仍屬小型，因此一般性的提醒同樣適用——但如果你用 Mac、又希望 GPU 真的被用到而不是退回 CPU，這是完全不必碰 CUDA 的那條路。"
+        },
+        url: "https://github.com/appautomaton/mlx-speech"
+      }
+    ]
+  },
+
   /* ===================== 9. RESOURCES (table) ===================== */
   {
     slug: "resources", layout: "table", icon: "link",
