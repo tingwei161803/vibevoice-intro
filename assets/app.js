@@ -369,9 +369,14 @@
         function openItem(slug) {
           var item = findItem(slug); if (!item) return;
           var dlg = L.dialog(), body = document.getElementById("dialogBody");
+          /* `url` is optional: a gallery item that points somewhere (a repo, a
+             paper) gets a link under its text. Items without it are unchanged. */
+          var link = item.url ?
+            '<p><a class="row-link" href="' + esc(item.url) + '" target="_blank" rel="noopener">' +
+              esc(item.url) + "</a></p>" : "";
           body.innerHTML = '<h2 id="dialogTitle">' + esc(t(item.title)) + "</h2>" +
             tagStrip(item.tags) +
-            "<p>" + esc(t(item.overview) || t(item.summary)) + "</p>";
+            "<p>" + esc(t(item.overview) || t(item.summary)) + "</p>" + link;
           if (!dlg.open) dlg.showModal();
           if (location.hash.slice(1) !== slug) history.replaceState(null, "", "#" + slug);
         }
