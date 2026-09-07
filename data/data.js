@@ -708,6 +708,19 @@ window.SITE_PAGES = [
         }
       },
       {
+        slug: "risk-oneclick", category: "guide",
+        title: { en: "One-click installers: the least-read code you will run", zh: "一鍵安裝：你會執行、但最不會去讀的程式碼" },
+        summary: {
+          en: "Pinokio, RunPod and Colab scripts for VibeVoice all exist — and every one of them is tiny and unlicensed.",
+          zh: "VibeVoice 的 Pinokio、RunPod、Colab 腳本都有人做——但每一個都規模極小且沒有授權。"
+        },
+        tags: [{ en: "One-click", zh: "一鍵安裝" }, { en: "No licence", zh: "無授權" }, { en: "Thin ice", zh: "站不太住" }],
+        overview: {
+          en: "If you searched for an easy way in, you will find one: there are Pinokio scripts (SUP3RMASS1VE/VibeVoice-Pinokio, 6 stars; a Realtime variant, 1 star), a RunPod serverless template (sruckh/VibeVoice-Serverless, 2 stars) and Colab notebooks (NeuralFalconYT/VibeVoice-Realtime-0.5B-colab, 3 stars). The pattern across them is the point of this card: every single one is a single-author project in the single digits of stars, and not one carries a licence file. That is the inverse of what you would want. A one-click installer is, by design, the format where you read nothing and grant the most — it fetches dependencies, writes to disk and runs whatever the script says, while the whole selling point is that you did not have to look. So the format that demands the most trust is the one with the least evidence behind it. None of these are known to be malicious and this is not an accusation; it is a statement about how little there is to go on. If you want the convenience, read the script first — they are short — or run it somewhere disposable.",
+          zh: "如果你在找輕鬆上手的方式，確實找得到：有 Pinokio 腳本（SUP3RMASS1VE/VibeVoice-Pinokio，6 star；另有 Realtime 版，1 star）、RunPod serverless 樣板（sruckh/VibeVoice-Serverless，2 star），以及 Colab notebook（NeuralFalconYT/VibeVoice-Realtime-0.5B-colab，3 star）。它們共通的模式才是這張卡的重點：每一個都是個位數 star 的單人專案，而且沒有任何一個附授權檔。這跟你會希望的狀況正好相反。一鍵安裝就設計上而言，正是那種「你什麼都不讀、卻授予最多」的格式——它會去抓依賴、寫入磁碟、執行腳本裡寫的任何東西，而它整個賣點就是你不必去看。於是最需要信任的格式，背後可查的證據反而最少。這些都沒有已知的惡意行為，這裡也不是在指控；這是在陳述「可供判斷的資訊有多稀薄」。如果你要這份方便，就先把腳本讀過——它們都不長——或者丟到一台隨時可以丟掉的環境裡跑。"
+        }
+      },
+      {
         slug: "risk-7b-weights", category: "guide",
         title: { en: "Your \"7B / Large\" weights are not Microsoft's", zh: "你用的「7B / Large」不是微軟發布的" },
         summary: {
@@ -719,6 +732,20 @@ window.SITE_PAGES = [
           en: "Microsoft's Hugging Face org publishes exactly these VibeVoice checkpoints: TTS-1.5B, Realtime-0.5B, the ASR family (ASR, ASR-HF, ASR-BitNet, ASR-Streaming 1.5B and 7B) and the acoustic tokenizer. There is no microsoft/VibeVoice-7B for text-to-speech — the larger TTS model appears in the paper's benchmarks but was never left up for download. Yet the wrappers that offer you a 'Large' or '7B' voice all fetch it from somewhere else: vibevoice/VibeVoice-7B (~36k downloads), aoi-ot/VibeVoice-Large, FabioSarracino/VibeVoice-Large-Q8, zhaokun/vibevoice-large. The reassuring part: every one of those mirrors ships safetensors with no pickle files, so loading them cannot execute code. The unresolved part: nobody outside those uploaders can confirm the weights are unmodified Microsoft originals, and a fine-tuned or tampered model would look identical from the outside. If provenance matters to your use case, stay on the 1.5B checkpoint that Microsoft actually hosts.",
           zh: "微軟的 Hugging Face 帳號上，VibeVoice 系列的權重就是這些：TTS-1.5B、Realtime-0.5B、ASR 家族（ASR、ASR-HF、ASR-BitNet、ASR-Streaming 的 1.5B 與 7B）與聲學 tokenizer。**沒有** 給語音合成用的 microsoft/VibeVoice-7B——較大的 TTS 模型出現在論文的評測裡，但從未留在網路上供人下載。然而所有提供「Large」或「7B」音色的包裝，都是去別處抓的：vibevoice/VibeVoice-7B（約 3.6 萬次下載）、aoi-ot/VibeVoice-Large、FabioSarracino/VibeVoice-Large-Q8、zhaokun/vibevoice-large。可以放心的部分：這些鏡像全都是 safetensors、沒有任何 pickle 檔，載入時無法執行程式碼。無解的部分：除了上傳者本人，沒有人能確認那些權重是未經修改的微軟原版，而一個被微調過或動過手腳的模型，從外面看起來一模一樣。如果來源可信度對你的用途很重要，就留在微軟真的有在託管的 1.5B。"
         }
+      },
+      {
+        slug: "name-collision", category: "guide",
+        title: { en: "Not every \"vibevoice\" is this VibeVoice", zh: "不是每個「vibevoice」都是這個 VibeVoice" },
+        summary: {
+          en: "The 12th most-starred result for the search is an unrelated dictation tool. Check the owner, not the name.",
+          zh: "搜尋結果中 star 第 12 高的，是一個毫不相關的聽寫工具。要看擁有者，不是看名字。"
+        },
+        tags: [{ en: "Name collision", zh: "同名" }, "★ 160", { en: "Not related", zh: "並非同一物" }],
+        overview: {
+          en: "Search GitHub for 'vibevoice' and mpaepper/vibevoice comes back with 160 stars, high enough to look official at a glance. It has nothing to do with Microsoft's model: it is a local dictation tool built on faster-whisper that types what you say into any application, written by Marc Papper after he saw Karpathy talk about voice-driven coding. It is a legitimate, useful project — it is simply a different thing that happens to share a word. This is worth knowing because star count is how most people triage search results, and here it points at the wrong repository. The habit that protects you is cheap: look at the owner and the description before the name. Microsoft's is microsoft/VibeVoice; the maintained community fork is vibevoice-community/VibeVoice. Anything else, read what it actually says it does.",
+          zh: "在 GitHub 搜尋 vibevoice，mpaepper/vibevoice 會帶著 160 star 出現，乍看之下高到像是官方的東西。它跟微軟的模型毫無關係：那是一個建在 faster-whisper 上的本地聽寫工具，能把你說的話打進任何應用程式，作者 Marc Päpper 是看了 Karpathy 談語音驅動寫程式之後做的。它是個正當而且好用的專案——只是碰巧共用了一個詞，本質是另一回事。這件事值得知道，是因為多數人就是用 star 數在篩選搜尋結果，而在這裡 star 數會把你指向錯的 repo。能保護你的習慣很便宜：先看擁有者與描述，再看名字。微軟的是 microsoft/VibeVoice，有在維護的社群 fork 是 vibevoice-community/VibeVoice。其他任何一個，都去讀它自己說它在做什麼。"
+        },
+        url: "https://github.com/mpaepper/vibevoice"
       },
       {
         slug: "risk-disclosure", category: "guide",
