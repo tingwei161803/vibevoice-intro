@@ -149,6 +149,9 @@ h1,h2,h3 { color:var(--ink); font-family:var(--font-display); text-wrap:balance;
 .page-head--hub { margin-bottom:40px; }
 .page-head--hub h1 { font-size:clamp(2.4rem,6.2vw,4.4rem); line-height:1.02; letter-spacing:-.04em; max-width:20ch; margin-bottom:18px; }
 :lang(zh-Hant) .page-head--hub h1 { letter-spacing:-.02em; max-width:none; }
+/* greedy wrap keeps "long-form" whole; balance would split it at the hyphen */
+.page-head--hub h1:lang(en) { text-wrap:wrap; max-width:13em; }
+.nobr { white-space:nowrap; }
 .page-head--hub .page-head__sub { font-size:1.125rem; max-width:60ch; }
 
 /* ---- multitrack hero ---- */

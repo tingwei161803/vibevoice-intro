@@ -304,7 +304,9 @@
       /* ---- hub: multitrack hero + the site as four tracks ---- */
       hub: function (p) {
         var rows = L.tracks().map(trackRow).join("");
-        return '<header class="page-head page-head--hub"><h1>' + esc(t(p.title)) + "</h1>" +
+        /* keep hyphenated words ("long-form") on one line in the big heading */
+        var h1 = esc(t(p.title)).replace(/([A-Za-z0-9]+(?:-[A-Za-z0-9]+)+)/g, '<span class="nobr">$1</span>');
+        return '<header class="page-head page-head--hub"><h1>' + h1 + "</h1>" +
             '<p class="page-head__sub">' + esc(t(p.subtitle)) + "</p></header>" +
           multitrack(p) +
           '<div class="tracks">' + rows + "</div>";
