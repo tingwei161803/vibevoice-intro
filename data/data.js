@@ -35,12 +35,63 @@ window.SITE_PAGES = [
       en: "VibeVoice synthesises up to 90 minutes of natural, multi-speaker audio in a single pass — powered by a 7.5 Hz continuous speech tokenizer and a next-token diffusion design. Six open checkpoints now cover long-form TTS, real-time speech, long-form and streaming recognition, and CPU-only edge inference.",
       zh: "VibeVoice 用 7.5 Hz 連續語音 tokenizer 與「next-token diffusion」架構，單次最長可生成 90 分鐘、最多 4 位語者的自然語音。目前六個開源權重涵蓋長語音合成、即時語音、長音訊與串流辨識，以及純 CPU 的邊緣推論。"
     },
+    /* 首頁的四個數字不再是四個方框，而是多軌視窗頂端的讀數列（像錄音軟體的 transport）。
+       unit 跟數字擺一起，label 是一句說明。 */
     stats: [
-      { value: 90,  label: { en: "min in one pass", zh: "分鐘・單次最長語音" } },
-      { value: 4,   label: { en: "speakers at once", zh: "位・同時語者" } },
-      { value: 7.5, label: { en: "Hz tokenizer", zh: "Hz・連續語音取樣" } },
-      { value: 6,   label: { en: "open checkpoints", zh: "個・開源模型權重" } }
-    ]
+      { value: "90",  unit: { en: "min", zh: "分鐘" }, label: { en: "in one pass", zh: "單次最長語音" } },
+      { value: "4",   unit: { en: "speakers", zh: "位語者" }, label: { en: "in one generation", zh: "同一次生成" } },
+      { value: "7.5", unit: { en: "Hz", zh: "Hz" }, label: { en: "tokenizer frame rate", zh: "連續語音取樣" } },
+      { value: "6",   unit: { en: "checkpoints", zh: "個權重" }, label: { en: "open on Hugging Face", zh: "開源模型權重" } }
+    ],
+    /* 首頁主視覺：0:00 → 90:00 的四軌時間軸，一軌一位語者。
+       語者輪流發言、彼此不重疊——VibeVoice 本來就不做重疊對話（見 FAQ）。 */
+    hero: {
+      speakers: [
+        { en: "Speaker 1", zh: "語者 1" },
+        { en: "Speaker 2", zh: "語者 2" },
+        { en: "Speaker 3", zh: "語者 3" },
+        { en: "Speaker 4", zh: "語者 4" }
+      ],
+      figure: {
+        en: "Illustration: a 90-minute session in which four speakers take turns, one lane each, generated in a single pass.",
+        zh: "示意圖：一段 90 分鐘、四位語者輪流發言的對話，一位語者一條音軌，一次生成完成。"
+      },
+      zoomTitle: { en: "Zoom into one second", zh: "放大其中一秒" },
+      zoomRows: [
+        { hz: 7.5, label: { en: "VibeVoice", zh: "VibeVoice" } },
+        { hz: 50,  label: { en: "Conventional, low end", zh: "傳統做法（下限）" } }
+      ],
+      zoomNote: {
+        en: "Fewer frames per second is why 90 minutes fits in a 64K context: about 40,500 tokens instead of 135,000+.",
+        zh: "每秒的格數少，90 分鐘才放得進 64K 脈絡：約 40,500 個 token，而不是 135,000 個以上。"
+      }
+    },
+    /* 首頁把 13 個頁面分成四條「音軌」，顏色依序對應語者 1–4。
+       內頁標題上方的標籤、頂部導覽的分組也都用這份對照。 */
+    tracks: [
+      { key: "models", title: { en: "Models", zh: "模型" },
+        note: { en: "What is in the family, and how the builds differ.", zh: "家族裡有哪些模型，各版本差在哪。" },
+        pages: ["models", "versions", "specs"] },
+      { key: "hood", title: { en: "Under the hood", zh: "技術原理" },
+        note: { en: "How a 7.5 Hz stream becomes 24 kHz audio.", zh: "7.5 Hz 的序列怎麼變回 24 kHz 的聲音。" },
+        pages: ["architecture"],
+        chain: [
+          { name: { en: "Text + voice prompts", zh: "文字 + 語者參考音" }, role: { en: "the script and who says it", zh: "講稿與誰來講" } },
+          { name: { en: "LLM backbone", zh: "LLM 主幹" }, role: { en: "Qwen2.5 · who speaks, what comes next", zh: "Qwen2.5・誰在說、接下來說什麼" } },
+          { name: { en: "7.5 Hz tokens", zh: "7.5 Hz token" }, role: { en: "~40,500 for 90 minutes", zh: "90 分鐘約 40,500 個" } },
+          { name: { en: "Diffusion head", zh: "Diffusion head" }, role: { en: "paints the acoustic detail back", zh: "把聲學細節補繪回來" } },
+          { name: { en: "24 kHz audio", zh: "24 kHz 音訊" }, role: { en: "the finished waveform", zh: "最後的波形" } }
+        ] },
+      { key: "versus", title: { en: "Versus", zh: "對比" },
+        note: { en: "Side by side with other TTS, ASR and realtime models.", zh: "和其他 TTS、ASR、即時語音模型並排看。" },
+        pages: ["compare", "compare-asr", "compare-realtime"],
+        preview: "compare", previewRows: 5,
+        previewMore: { en: "Full TTS comparison", zh: "看完整的語音合成對比" } },
+      { key: "field", title: { en: "In the field", zh: "實際使用" },
+        note: { en: "Reception, use cases, history, community builds and the fine print.", zh: "評價、應用、發展歷程、社群專案與使用限制。" },
+        pages: ["reviews", "usecases", "timeline", "community", "faq", "resources"] }
+    ],
+    navTitle: { en: "Home", zh: "首頁" }
   },
 
   /* ===================== 2. MODELS (gallery) ===================== */
@@ -277,7 +328,7 @@ window.SITE_PAGES = [
     },
     stats: [
       { label: { en: "Frame rate",        zh: "連續語音取樣率" }, value: "7.5", unit: { en: "Hz", zh: "Hz" } },
-      { label: { en: "Context (TTS/ASR)", zh: "脈絡長度 (TTS/ASR)" }, value: "64", unit: { en: "K tokens", zh: "K token" } },
+      { label: { en: "Context (TTS/ASR)", zh: "脈絡長度（TTS/ASR）" }, value: "64", unit: { en: "K tokens", zh: "K token" } },
       { label: { en: "Audio output",      zh: "音訊輸出取樣" }, value: "24", unit: { en: "kHz", zh: "kHz" } },
       { label: { en: "Realtime latency",  zh: "即時版首字延遲" }, value: "~300", unit: { en: "ms", zh: "毫秒" } },
       { label: { en: "Streaming ASR chunk", zh: "串流辨識輸出間隔" }, value: "~2.9", unit: { en: "s", zh: "秒" } },
