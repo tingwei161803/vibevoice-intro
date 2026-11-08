@@ -44,11 +44,212 @@
       return out ? '<div class="card__tags">' + out + "</div>" : "";
     }
 
+    /* ---------- seeded randomness: the same page always draws the same wave,
+       so the prerendered HTML and the live render match byte for byte ---------- */
+    function seeded(str) {
+      var h = 2166136261;
+      for (var i = 0; i < str.length; i++) { h ^= str.charCodeAt(i); h = Math.imul(h, 16777619); }
+      return function () {
+        h = (h + 0x6D2B79F5) | 0;
+        var x = Math.imul(h ^ (h >>> 15), 1 | h);
+        x = (x + Math.imul(x ^ (x >>> 7), 61 | x)) ^ x;
+        return ((x ^ (x >>> 14)) >>> 0) / 4294967296;
+      };
+    }
+
+    /* bars of a waveform between x0 and x1 (viewBox units), mirrored around mid */
+    function wavePath(rnd, x0, x1, step, mid, amp) {
+      var d = "", phase = rnd() * 6;
+      for (var x = x0; x <= x1; x += step) {
+        var env = 0.55 + 0.45 * Math.sin(x * 0.11 + phase) * Math.sin(x * 0.023 + phase * 2);
+        var a = Math.max(1.2, amp * Math.abs(env) * (0.3 + 0.7 * rnd()));
+        d += "M" + r(x) + " " + r(mid - a) + "V" + r(mid + a);
+      }
+      return d;
+    }
+
+    /* thin single-lane waveform under each inner page title — the site's divider */
+    function waveStrip(seed) {
+      var rnd = seeded(seed);
+      return '<div class="wavestrip" aria-hidden="true">' +
+        '<svg viewBox="0 0 1200 40" preserveAspectRatio="none" focusable="false">' +
+        '<path d="' + wavePath(rnd, 3, 1197, 6, 20, 18) + '"/></svg></div>';
+    }
+
+    function laneTag(slug) {
+      var hit = L.trackOf(slug);
+      if (!hit) return "";
+      return '<a class="lane-tag" href="index.html#track-' + esc(hit.track.key) + '">' +
+        '<i aria-hidden="true"></i><span class="lane-tag__n">T' + hit.index + "</span>" +
+        esc(t(hit.track.title)) + "</a>";
+    }
+
     /* ---------- shared bits ---------- */
     function head(p) {
       var sub = t(p.subtitle)
         ? '<p class="page-head__sub">' + esc(t(p.subtitle)) + "</p>" : "";
-      return '<header class="page-head"><h1>' + esc(t(p.title)) + "</h1>" + sub + "</header>";
+      return '<header class="page-head">' + laneTag(p.slug) + "<h1>" + esc(t(p.title)) + "</h1>" + sub +
+        waveStrip(p.slug) + "</header>";
+    }
+
+    /* how much is behind each page, said in its own unit ("5 cards", "8 specs") */
+    function pageMeta(q) {
+      var zh = L.state.lang !== "en", n, u;
+      switch (q.layout) {
+        case "gallery":    n = (q.items || []).length;    u = zh ? "張卡片" : "cards"; break;
+        case "comparison": n = (q.plans || []).length;    u = zh ? "款並列" : "side by side"; break;
+        case "article":    n = (q.sections || []).length; u = zh ? "節" : "sections"; break;
+        case "dashboard":  n = q.table ? (q.table.rows || []).length : 0; u = zh ? "項規格" : "specs"; break;
+        case "timeline":   n = (q.events || []).length;   u = zh ? "個事件" : "events"; break;
+        case "faq":        n = (q.qa || []).length;       u = zh ? "個問題" : "questions"; break;
+        case "bento":      n = (q.tiles || []).length;    u = zh ? "個場景" : "scenarios"; break;
+        case "table":      n = (q.rows || []).length;     u = zh ? "個連結" : "links"; break;
+        default: return "";
+      }
+      return n ? n + " " + u : "";
+    }
+
+    /* ---- home: the multitrack hero ---- */
+    var MT_MIN = 90;          // ruler length in minutes
+    var MT_U = 10;            // viewBox units per minute
+    function multitrack(p) {
+      var hero = p.hero || {};
+      var speakers = hero.speakers || [];
+      var nLanes = speakers.length || 4;
+      var rnd = seeded("vibevoice-session");
+
+      /* turns: speakers take turns, never overlapping (VibeVoice does not do
+         overlapping speech), each turn 1–6 min with a short pause between */
+      var turns = [], tm = 0.6, prev = -1, guard = 0;
+      var air = speakers.map(function () { return 0; });
+      while (tm < MT_MIN - 1.2 && guard++ < 200) {
+        /* whoever has spoken least is most likely to speak next */
+        var w = air.map(function (a, k) { return k === prev ? 0 : 1 / Math.pow(1 + a, 1.5); });
+        var sum = w.reduce(function (x, y) { return x + y; }, 0), pick = rnd() * sum, s = 0;
+        while (s < nLanes - 1 && pick > w[s]) { pick -= w[s]; s++; }
+        var dur = 1.5 + rnd() * 4.5;
+        var end = Math.min(MT_MIN - 0.5, tm + dur);
+        turns.push({ s: s, a: tm, b: end });
+        air[s] += end - tm;
+        prev = s;
+        tm = end + 0.25 + rnd() * 0.5;
+      }
+
+      var lanes = speakers.map(function (sp, i) {
+        var clips = "", wave = "";
+        turns.forEach(function (tn) {
+          if (tn.s !== i) return;
+          var x0 = tn.a * MT_U, x1 = tn.b * MT_U;
+          clips += '<rect x="' + r(x0) + '" y="4" width="' + r(x1 - x0) + '" height="92"/>';
+          wave += wavePath(rnd, x0 + 2, x1 - 2, 3, 50, 40);
+        });
+        return '<div class="mt__lane" data-lane="' + (i + 1) + '">' +
+          '<div class="mt__head"><i aria-hidden="true"></i><span class="mt__name">' + esc(t(sp)) + "</span>" +
+            '<span class="mt__short" aria-hidden="true">S' + (i + 1) + "</span></div>" +
+          '<div class="mt__track"><svg viewBox="0 0 ' + (MT_MIN * MT_U) + ' 100" preserveAspectRatio="none" focusable="false">' +
+            '<g class="mt__clips">' + clips + '</g><path class="mt__wave" d="' + wave + '"/></svg></div></div>';
+      }).join("");
+
+      var marks = "";
+      for (var m = 0; m <= MT_MIN; m += 15) {
+        marks += '<span class="mt__mark' + (m % 30 ? " mt__mark--minor" : "") + '" style="left:' + r(m / MT_MIN * 100) + '%">' +
+          m + ":00</span>";
+      }
+
+      var readouts = (p.stats || []).map(function (st) {
+        return '<div class="mt__readout"><dt>' + esc(t(st.label)) + "</dt>" +
+          '<dd><b>' + esc(String(st.value)) + "</b> " + esc(t(st.unit)) + "</dd></div>";
+      }).join("");
+
+      var zoom = (hero.zoomRows || []).map(function (z) {
+        return '<div class="mt__zrow"><span class="mt__zlabel"><b>' + esc(String(z.hz)) + " Hz</b> " + esc(t(z.label)) + "</span>" +
+          '<span class="mt__ticks" style="--hz:' + esc(String(z.hz)) + '"></span></div>';
+      }).join("");
+
+      return '<figure class="mt" aria-labelledby="mtCap">' +
+        '<div class="mt__transport">' +
+          '<div class="mt__clock" aria-hidden="true"><span class="mt__time" id="mtTime">90:00</span>' +
+            '<span class="mt__total">/ 90:00</span></div>' +
+          '<dl class="mt__readouts">' + readouts + "</dl>" +
+        "</div>" +
+        '<div class="mt__grid">' +
+          '<div class="mt__ruler" aria-hidden="true">' + marks + "</div>" +
+          lanes +
+          '<div class="mt__playhead" aria-hidden="true"></div>' +
+        "</div>" +
+        '<div class="mt__foot">' +
+          '<figcaption class="mt__cap" id="mtCap">' + esc(t(hero.figure)) + "</figcaption>" +
+          '<div class="mt__zoom"><p class="mt__ztitle">' + esc(t(hero.zoomTitle)) + "</p>" + zoom +
+            '<p class="mt__znote">' + esc(t(hero.zoomNote)) + "</p></div>" +
+        "</div>" +
+      "</figure>";
+    }
+
+    /* ---- home: one row per track ---- */
+    function trackRow(tr, i) {
+      var clips = (tr.pages || []).map(function (slug) {
+        var q = L.pageBySlug(slug);
+        if (!q) return "";
+        var meta = pageMeta(q);
+        return '<a class="clip" href="' + esc(L.pageHref(q)) + '">' +
+          '<span class="clip__name">' + esc(t(q.title)) + "</span>" +
+          '<span class="clip__sum">' + esc(t(q.subtitle)) + "</span>" +
+          (meta ? '<span class="clip__meta">' + esc(meta) + "</span>" : "") + "</a>";
+      }).join("");
+
+      var extra = "";
+      if (tr.key === "models") {
+        var mp = L.pageBySlug("models");
+        if (mp && mp.items) {
+          extra = '<ul class="modelstrip">' + mp.items.map(function (it) {
+            return '<li><a href="models.html#' + esc(it.slug) + '">' +
+              esc(t(it.title).replace(/^VibeVoice-/, "")) + "</a></li>";
+          }).join("") + "</ul>";
+        }
+      }
+      if (tr.chain) {
+        extra = '<ol class="chain">' + tr.chain.map(function (c) {
+          return '<li class="chain__step"><b>' + esc(t(c.name)) + "</b><span>" + esc(t(c.role)) + "</span></li>";
+        }).join("") + "</ol>";
+      }
+      if (tr.preview) {
+        var cp = L.pageBySlug(tr.preview);
+        if (cp) {
+          var rows = (cp.features || []).slice(0, tr.previewRows || 5);
+          extra = '<div class="minimatrix"><div class="table-wrap">' + cmpTable(cp.plans || [], rows, true) + "</div>" +
+            '<a class="more-link" href="' + esc(L.pageHref(cp)) + '">' + esc(t(tr.previewMore)) + "</a></div>";
+        }
+      }
+
+      return '<section class="trk" id="track-' + esc(tr.key) + '" data-lane="' + (i + 1) + '" aria-labelledby="trk-' + esc(tr.key) + '">' +
+        '<header class="trk__head"><span class="trk__num">T' + (i + 1) + "</span>" +
+          '<h2 class="trk__title" id="trk-' + esc(tr.key) + '">' + esc(t(tr.title)) + "</h2>" +
+          '<p class="trk__note">' + esc(t(tr.note)) + "</p></header>" +
+        '<div class="trk__body"><div class="clips clips--' + (tr.pages || []).length + '">' + clips + "</div>" + extra + "</div>" +
+      "</section>";
+    }
+
+    /* comparison table body, shared by the comparison page and the home preview */
+    function cmpTable(plans, feats, compact) {
+      var thead = '<th scope="col"></th>' + plans.map(function (pl) {
+        return '<th scope="col" class="' + (pl.highlight ? "cmp-col--hl" : "") + '">' +
+          '<div class="cmp-plan">' + esc(t(pl.name)) + "</div>" +
+          '<div class="cmp-price">' + esc(t(pl.price)) + "</div>" +
+          (!compact && t(pl.note) ? '<div class="cmp-note">' + esc(t(pl.note)) + "</div>" : "") + "</th>";
+      }).join("");
+      var rows = feats.map(function (f) {
+        var cells = plans.map(function (pl) {
+          var v = f.values ? f.values[pl.key] : undefined;
+          var cell;
+          if (v === true) cell = '<span class="cmp-yes material-symbols-rounded" aria-label="yes">check</span>';
+          else if (v === false || v == null) cell = '<span class="cmp-no" aria-label="no">—</span>';
+          else cell = esc(t(v));
+          return '<td class="' + (pl.highlight ? "cmp-col--hl" : "") + '">' + cell + "</td>";
+        }).join("");
+        return '<tr><th scope="row" class="cmp-feat">' + esc(t(f.label)) + "</th>" + cells + "</tr>";
+      }).join("");
+      return '<table class="cmp-table' + (compact ? " cmp-table--compact" : "") + '">' +
+        "<thead><tr>" + thead + "</tr></thead><tbody>" + rows + "</tbody></table>";
     }
 
     function barChart(series, accent) {
@@ -100,23 +301,13 @@
        ===================================================================== */
     var RENDERERS = {
 
-      /* ---- hub: hero stats + a card linking to every other page ---- */
+      /* ---- hub: multitrack hero + the site as four tracks ---- */
       hub: function (p) {
-        var stats = (p.stats || []).map(function (s) {
-          return '<div class="hero__stat" data-item>' +
-            '<b class="hero__stat-value" data-count="' + esc(String(s.value)) + '">0</b>' +
-            '<span class="hero__stat-label">' + esc(t(s.label)) + "</span></div>";
-        }).join("");
-        var cards = L.pages.filter(function (q) { return q.slug !== "home"; }).map(function (q) {
-          return '<a class="card card--nav" data-item href="' + esc(L.pageHref(q)) + '" ' +
-              'aria-label="' + esc(t(q.title)) + '">' +
-            '<span class="material-symbols-rounded card__icon" aria-hidden="true">' + esc(q.icon || "label") + "</span>" +
-            '<h3 class="card__title">' + esc(t(q.title)) + "</h3>" +
-            '<p class="card__summary">' + esc(t(q.subtitle)) + "</p></a>";
-        }).join("");
-        return head(p) +
-          (stats ? '<div class="hero__stats">' + stats + "</div>" : "") +
-          '<div class="grid">' + cards + "</div>";
+        var rows = L.tracks().map(trackRow).join("");
+        return '<header class="page-head page-head--hub"><h1>' + esc(t(p.title)) + "</h1>" +
+            '<p class="page-head__sub">' + esc(t(p.subtitle)) + "</p></header>" +
+          multitrack(p) +
+          '<div class="tracks">' + rows + "</div>";
       },
 
       /* ---- gallery: search + chips + card grid + dialog ---- */
@@ -266,26 +457,7 @@
 
       /* ---- comparison: plans (cols) x features (rows) ---- */
       comparison: function (p) {
-        var plans = p.plans || [], feats = p.features || [];
-        var thead = '<th scope="col"></th>' + plans.map(function (pl) {
-          return '<th scope="col" class="' + (pl.highlight ? "cmp-col--hl" : "") + '">' +
-            '<div class="cmp-plan">' + esc(t(pl.name)) + "</div>" +
-            '<div class="cmp-price">' + esc(t(pl.price)) + "</div>" +
-            (t(pl.note) ? '<div class="cmp-note">' + esc(t(pl.note)) + "</div>" : "") + "</th>";
-        }).join("");
-        var rows = feats.map(function (f) {
-          var cells = plans.map(function (pl) {
-            var v = f.values ? f.values[pl.key] : undefined;
-            var cell;
-            if (v === true) cell = '<span class="cmp-yes material-symbols-rounded" aria-label="yes">check</span>';
-            else if (v === false || v == null) cell = '<span class="cmp-no" aria-label="no">—</span>';
-            else cell = esc(t(v));
-            return '<td class="' + (pl.highlight ? "cmp-col--hl" : "") + '">' + cell + "</td>";
-          }).join("");
-          return '<tr data-item><th scope="row" class="cmp-feat">' + esc(t(f.label)) + "</th>" + cells + "</tr>";
-        }).join("");
-        return head(p) + '<div class="table-wrap"><table class="cmp-table">' +
-          "<thead><tr>" + thead + "</tr></thead><tbody>" + rows + "</tbody></table></div>";
+        return head(p) + '<div class="table-wrap">' + cmpTable(p.plans || [], p.features || [], false) + "</div>";
       },
 
       /* ---- leaderboard: ranked list + tier grouping toggle ---- */
@@ -326,7 +498,7 @@
        WIRING (interactions) — keyed by layout, run after innerHTML is set
        ===================================================================== */
     var WIRE = {
-      hub: function () { animateCounters(); },
+      hub: function () { playSweep(); },
 
       gallery: function (p) {
         var grid = document.getElementById("grid");
@@ -626,60 +798,27 @@
       }
     };
 
-    /* ---- hero count-up (shared by hub) ---- */
-    function animateCounters() {
-      var els = [].slice.call(pageEl.querySelectorAll(".hero__stat-value[data-count]"));
-      if (!els.length) return;
-      function run(el) {
-        var target = parseFloat(el.dataset.count) || 0, dur = 1000, start = null;
-        function step(ts) {
-          if (start === null) start = ts;
-          var pr = Math.min(1, (ts - start) / dur), eased = 1 - Math.pow(1 - pr, 3);
-          el.textContent = String(Math.round(target * eased));
-          if (pr < 1) requestAnimationFrame(step); else el.textContent = String(target);
-        }
-        requestAnimationFrame(step);
-      }
-      if (!("IntersectionObserver" in window)) { els.forEach(run); return; }
-      var io = new IntersectionObserver(function (entries) {
-        entries.forEach(function (en) { if (en.isIntersecting) { run(en.target); io.unobserve(en.target); } });
-      }, { threshold: 0.4 });
-      els.forEach(function (el) { io.observe(el); });
-      teardowns.push(function () { io.disconnect(); });
-    }
-
-    /* ---- scroll-reveal for [data-item] (premium entry animation) ----
-       No-JS-safe: items only hide once we add `has-reveal` to #page, so a
-       browser without IntersectionObserver (or with reduced motion) shows
-       everything immediately. */
-    function revealItems() {
-      if (!("IntersectionObserver" in window)) return;
+    /* ---- home: the playhead sweeps 0:00 -> 90:00 once, the clock follows ----
+       The sweep itself is CSS (it runs, and ends fully drawn, without JS).
+       Reduced motion: no sweep, the clock just reads 90:00. */
+    function playSweep() {
+      var el = document.getElementById("mtTime");
+      if (!el || !window.requestAnimationFrame) return;
       if (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-      pageEl.classList.add("has-reveal");
-      var io = new IntersectionObserver(function (entries) {
-        entries.forEach(function (en) {
-          if (en.isIntersecting) { en.target.classList.add("in"); io.unobserve(en.target); }
-        });
-      }, { rootMargin: "0px 0px -8% 0px", threshold: 0.06 });
-      // table rows reveal poorly (transforms on <tr> are buggy) — show them at once
-      function arm(el) { if (el.tagName === "TR") el.classList.add("in"); else io.observe(el); }
-      [].forEach.call(pageEl.querySelectorAll("[data-item]"), arm);
-      // Content painted AFTER first render (gallery filter/search swaps #grid, table
-      // re-sorts tbody) must reveal too — otherwise a re-paint leaves new cards stuck
-      // at opacity:0. Show freshly inserted items immediately.
-      var mo = new MutationObserver(function (muts) {
-        muts.forEach(function (m) {
-          [].forEach.call(m.addedNodes, function (n) {
-            if (n.nodeType !== 1) return;
-            if (n.matches && n.matches("[data-item]")) n.classList.add("in");
-            if (n.querySelectorAll) {
-              [].forEach.call(n.querySelectorAll("[data-item]"), function (c) { c.classList.add("in"); });
-            }
-          });
-        });
-      });
-      mo.observe(pageEl, { childList: true, subtree: true });
-      teardowns.push(function () { io.disconnect(); mo.disconnect(); });
+      var DELAY = 300, DUR = 2600, start = null;
+      function fmt(min) {
+        var m = Math.floor(min), sec = Math.floor((min - m) * 60);
+        return (m < 10 ? "0" : "") + m + ":" + (sec < 10 ? "0" : "") + sec;
+      }
+      function step(ts) {
+        if (start === null) start = ts;
+        var pr = Math.min(1, Math.max(0, (ts - start - DELAY) / DUR));
+        var eased = 1 - Math.pow(1 - pr, 3);
+        el.textContent = pr >= 1 ? "90:00" : fmt(MT_MIN * eased);
+        if (pr < 1) requestAnimationFrame(step);
+      }
+      el.textContent = "00:00";
+      requestAnimationFrame(step);
     }
 
     /* =====================================================================
@@ -692,10 +831,12 @@
       if (!p) { pageEl.innerHTML = '<p class="empty">No page data.</p>'; return; }
       var fn = RENDERERS[p.layout] || RENDERERS.gallery;
       pageEl.className = "page page--" + p.layout;
+      var lane = L.trackOf(p.slug);
+      if (lane) pageEl.setAttribute("data-lane", String(lane.index));
+      else pageEl.removeAttribute("data-lane");
       pageEl.innerHTML = fn(p);
       var w = WIRE[p.layout];
       if (w) w(p);
-      revealItems();
     }
 
     render();
