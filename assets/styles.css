@@ -329,8 +329,10 @@ a { color:inherit; text-decoration:none; }
   --elev-3:0 1px 0 rgba(255,255,255,.07) inset, 0 32px 80px -28px rgba(80,40,180,.65);
 }
 
-/* ---- LIGHT : soft luminous off-white, same accent identity ---- */
-:root,
+/* ---- LIGHT : soft luminous off-white, same accent identity ----
+   Only [data-theme="light"] — a `:root` here (same specificity as
+   [data-theme="dark"], but later in the file) used to win on <html>
+   and kept the page light even when the dark theme was selected. */
 [data-theme="light"] {
   --primary:#6d3df5; --on-primary:#ffffff;
   --primary-container:#ece4ff; --on-primary-container:#22054f;
